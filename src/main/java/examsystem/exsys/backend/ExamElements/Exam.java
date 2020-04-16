@@ -17,7 +17,7 @@ public class Exam {
     public static final String FIND_ALL = "Exam.findAll";
     public static final String FIND_BY_TEACHER_ID = "Exam.findAllByTeacherId";
 
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private int exam_Id;
     private String examName;
@@ -34,18 +34,10 @@ public class Exam {
     private int gradeThreePointLimit;
     private int gradeTwoPointLimit;
 
-    @OneToMany
-    @JoinColumn(name="question_id")
-    private List<Question> questions;
-
     private int numberOfQuestions;
     private int maxSumOfPoints;
     private boolean isWrongAnswerMinusPoint = false;
     private int valueOfMinusPoint = 0;
-
-    @OneToMany()
-    @JoinColumn(name="examresult_id")
-    private List<ExamResult> completedExams;
 
     public Exam() {
     }
@@ -136,14 +128,6 @@ public class Exam {
 
     public void setExamId(int examId) {
         this.exam_Id = examId;
-    }
-
-    public List<Question> getQuestions() {
-        return questions;
-    }
-
-    public List<ExamResult> getCompletedExam() {
-        return completedExams;
     }
 
     public static String getFindAll() {

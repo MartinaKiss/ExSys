@@ -1,10 +1,21 @@
 package examsystem.exsys.views.main;
 
+import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.charts.model.Navigator;
 import com.vaadin.flow.component.dependency.JsModule;
+import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
@@ -12,8 +23,11 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteConfiguration;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
+import com.vaadin.flow.server.VaadinRequest;
+import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
+import examsystem.exsys.backend.Authentication;
 import examsystem.exsys.views.addotherdata.AddOtherDataView;
 import examsystem.exsys.views.addquestions.AddQuestionsView;
 import examsystem.exsys.views.contact.ContactView;
@@ -24,7 +38,6 @@ import examsystem.exsys.views.myexams.MyExamsView;
 import examsystem.exsys.views.register.RegisterView;
 import examsystem.exsys.views.result.ResultView;
 import examsystem.exsys.views.takeexam.TakeExamView;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,11 +51,27 @@ import java.util.Optional;
 @Theme(value = Lumo.class, variant = Lumo.DARK)
 public class MainView extends AppLayout {
 
+    private static final long serialVersionUID = 1L;
+    private Label secure;
+    private Label currentUser;
+    private Button otherSecure;
+    private Button logout = new Button("Kijelentkezés");
+    public static final String NAME = "Secure";
+
     private final Tabs menu;
 
     public MainView() {
+        HorizontalLayout imageContainer = new HorizontalLayout();
+        Image logo = new Image("frontend/logo.png", "ExSys Logo");
+        logo.setWidth("60%");
+        imageContainer.add(logo);
+        imageContainer.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+        imageContainer.setHeight(null);
         setPrimarySection(Section.DRAWER);
-        addToNavbar(true, new DrawerToggle());
+
+        addToNavbar(true, new DrawerToggle(), imageContainer);
+        createButtonLayout();
+
         menu = createMenuTabs();
         addToDrawer(menu);
     }
@@ -102,5 +131,16 @@ public class MainView extends AppLayout {
             return child instanceof RouterLink && ((RouterLink) child).getHref().equals(target);
         }).findFirst();
         tabToSelect.ifPresent(tab -> menu.setSelectedTab((Tab) tab));
+    }
+
+    private void createButtonLayout() {
+        HorizontalLayout buttonLayout = new HorizontalLayout();
+        buttonLayout.addClassName("button-layout");
+        buttonLayout.setWidth("100%");
+        buttonLayout
+                .setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+        logout.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        buttonLayout.add(logout);
+        addToNavbar(buttonLayout);
     }
 }

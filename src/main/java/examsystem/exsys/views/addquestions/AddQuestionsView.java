@@ -16,6 +16,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.ListDataProvider;
@@ -32,6 +33,8 @@ import java.util.List;
 @PageTitle("Kérdések hozzáadása")
 @CssImport("styles/views/tvkérdésekhozzáadása/t-vkérdésekhozzáadása-view.css")
 public class AddQuestionsView extends Div {
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "Secure";
 
     private Button cancel = new Button("Mégse");
     private Button nextButton = new Button("Tovább");
@@ -108,6 +111,7 @@ public class AddQuestionsView extends Div {
         Checkbox checkbox2 = new Checkbox();
         Checkbox checkbox3 = new Checkbox();
         Checkbox checkbox4 = new Checkbox();
+        NumberField pointsForQuestion = new NumberField();
 
         FormLayout.FormItem questionTextFormItem = addFormItem(wrapper, formLayout,
                 questionTextField, index + ". Kérdés szövege");
@@ -117,29 +121,43 @@ public class AddQuestionsView extends Div {
         HorizontalLayout answerLine1 = new HorizontalLayout();
         FormLayout.FormItem answer1FormItem = addFormItem(wrapper, formLayout,
                 answer1, "1. válasz szövege");
-        formLayout.setColspan(answer1FormItem, 2);
+        formLayout.setColspan(answer1FormItem, 3);
         answerLine1.add(answer1FormItem, checkbox1);
+        answerLine1.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
 
         HorizontalLayout answerLine2 = new HorizontalLayout();
         FormLayout.FormItem answer2FormItem = addFormItem(wrapper, formLayout,
                 answer2, "2. válasz szövege");
-        formLayout.setColspan(questionTextFormItem, 2);
+        formLayout.setColspan(answer2FormItem, 3);
         answerLine2.add(answer2FormItem, checkbox2);
+        answerLine2.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
 
         HorizontalLayout answerLine3 = new HorizontalLayout();
         FormLayout.FormItem answer3FormItem = addFormItem(wrapper, formLayout,
                 answer3, "3. válasz szövege");
-        formLayout.setColspan(questionTextFormItem, 2);
+        formLayout.setColspan(answer3FormItem, 3);
         answerLine3.add(answer3FormItem, checkbox3);
+        answerLine3.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
 
         HorizontalLayout answerLine4 = new HorizontalLayout();
         FormLayout.FormItem answer4FormItem = addFormItem(wrapper, formLayout,
                 answer4, "4. válasz szövege");
-        formLayout.setColspan(questionTextFormItem, 2);
+        formLayout.setColspan(answer4FormItem, 3);
         answerLine4.add(answer4FormItem, checkbox4);
+        answerLine4.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
 
-        answerContainer.add(answerLine1, answerLine2, answerLine3, answerLine4);
-        formLayout.add(questionTextFormItem, answerContainer);
+        HorizontalLayout pointsContainer = new HorizontalLayout();
+        FormLayout.FormItem pointsFormItem = addFormItem(wrapper, formLayout,
+                pointsForQuestion, "Pontszám");
+        formLayout.setColspan(pointsFormItem, 1);
+        pointsContainer.add(pointsFormItem);
+
+        answerContainer.add(answerLine1, answerLine2, answerLine3, answerLine4, pointsContainer);
+        answerContainer.setWidth("90%");
+        VerticalLayout outerAnswersContainer = new VerticalLayout();
+        outerAnswersContainer.add(answerContainer);
+        outerAnswersContainer.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
+        formLayout.add(questionTextFormItem, outerAnswersContainer);
         wrapper.add(formLayout);
     }
 

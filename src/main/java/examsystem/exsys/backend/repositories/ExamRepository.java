@@ -1,20 +1,45 @@
 package examsystem.exsys.backend.repositories;
 
 import examsystem.exsys.backend.ExamElements.Exam;
+import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.transaction.Transactional;
 import java.util.List;
 
-public interface ExamRepository {
-    
-    List<Exam> findAll();
+@Transactional
+@Repository
+public class ExamRepository {
 
-    void save(Exam exam);
+        @PersistenceContext
+        private EntityManager entityManager;
 
-    void update(Exam exam) throws Exception;
+        public List<Exam> findAll() {
+            return entityManager.createQuery("select n from " + Exam.class.getSimpleName() + " n").getResultList();
+        }
 
-    void delete(int id) throws Exception;
+        public void save(Exam exam) {
+            entityManager.persist(exam);
+        }
 
-    Exam findById(int id) throws Exception;
+        public void delete(int id) throws Exception {
+            entityManager.remove(findById(id));
 
-    List<Exam> findAllByTeacherId(int id) throws Exception;
+        }
+
+        public void update(Exam exam) {
+            entityManager.merge(exam);
+        }
+
+        public Exam findById(int id) {
+            return entityManager.find(Exam.class, id);
+        }
+
+        public List<Exam> findAllByTeacherId(int id) {
+            Query query = entityManager.createNamedQuery(Exam.FIND_BY_TEACHER_ID);
+            query.setParameter("teacherId",id);
+            return query.getResultList();
+        }
 }

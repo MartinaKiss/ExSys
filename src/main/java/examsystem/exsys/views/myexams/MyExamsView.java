@@ -1,13 +1,9 @@
 package examsystem.exsys.views.myexams;
 
-import com.vaadin.flow.component.AbstractField;
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.charts.model.Title;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.ItemClickEvent;
@@ -20,8 +16,6 @@ import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.router.BeforeEvent;
-import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import examsystem.exsys.backend.Entities.Teacher;
@@ -40,6 +34,9 @@ import java.util.List;
 @PageTitle("Vizsgáim")
 @CssImport("styles/views/vizsgáim/vizsgáim-view.css")
 public class MyExamsView extends Div {
+
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "Secure";
     @Autowired
     private TeacherRepository teacherRepository;
     @Autowired
@@ -99,7 +96,11 @@ public class MyExamsView extends Div {
         createGridLayout(splitLayout);
         createEditorLayout(splitLayout);
         wrapper.add(splitLayout);
-        add(wrapper);
+        VerticalLayout container = new VerticalLayout();
+        wrapper.setWidth("95%");
+        container.add(wrapper);
+        container.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
+        add(container);
     }
 
     @PostConstruct
@@ -107,7 +108,7 @@ public class MyExamsView extends Div {
         exams.addItemClickListener(new ComponentEventListener<ItemClickEvent<Exam>>() {
             @Override
             public void onComponentEvent(ItemClickEvent<Exam> event) {
-                if (!event.getItem().getCompletedExam().isEmpty()) {
+                if (!(examRepository.findById(event.getItem().getExamId()) == null )) {
                     Exam toShow = event.getItem();
                     exams.setDetailsVisible(toShow, !exams.isDetailsVisible(toShow)); //Switches between show and hide.
 
@@ -156,7 +157,7 @@ public class MyExamsView extends Div {
                 "a vizsgát rendszerből. A letöltés gombbal exportálhatja az eddig beküldött dolgozatok eredményeit cvs " +
                 "formátumban.");
         editorDiv.add(paragraph);
-        editorDiv.setMinWidth("35%");
+        editorDiv.setMinWidth("40%");
         editorDiv.add(completedExams);
         createButtonLayout(editorDiv);
         splitLayout.addToSecondary(editorDiv);

@@ -7,7 +7,6 @@ import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Paragraph;
@@ -15,13 +14,12 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.BeforeEvent;
-import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import examsystem.exsys.backend.ExamElements.Answer;
 import examsystem.exsys.backend.ExamElements.Exam;
 import examsystem.exsys.backend.ExamElements.Question;
+import examsystem.exsys.backend.repositories.AnswerRepository;
 import examsystem.exsys.backend.repositories.ExamRepository;
 import examsystem.exsys.backend.repositories.QuestionRepository;
 import examsystem.exsys.views.main.MainView;
@@ -41,6 +39,8 @@ public class TakeExamView extends Div{
     private ExamRepository examRepository;
     @Autowired
     private QuestionRepository questionRepository;
+    @Autowired
+    private AnswerRepository answerRepository;
 
     Grid<HorizontalLayout> grid = new Grid<>();
 
@@ -76,7 +76,7 @@ public class TakeExamView extends Div{
         createTitle(wrapper, "Vizsga neve");
         createParagraph(wrapper, "Ide kerül be a tanár leírása arról, hogy a feladatsor kitöltése közben mire tessenek figyelni, meg ilyenek.");
         if(!(exam == null)) {
-            if(!(exam.getQuestions().isEmpty())) {
+            if(!(questionRepository.findAllByExamId(exam.getExamId()).isEmpty())) {
                 for (int i = 0; i < exam.getNumberOfQuestions(); i++) {
                     createCard(questions.get(i), i+1, wrapper);
                 }
@@ -120,7 +120,7 @@ public class TakeExamView extends Div{
         wrapper.add(buttonLayout);
     }
 
-    private void createCard(Question question, int questionIndex, VerticalLayout wrapper) {
+    private void createCard(Question question, int questionIndex, VerticalLayout wrapper) throws Exception {
         HorizontalLayout questionCard = new HorizontalLayout();
         questionCard.addClassName("question_card");
         questionCard.setSpacing(false);
@@ -142,7 +142,7 @@ public class TakeExamView extends Div{
         answers.setSpacing(false);
 
         CheckboxGroup<Answer> answerCheckboxGroup = new CheckboxGroup<>();
-        List<Answer> answerCheckboxes = question.getAnswers();
+        List<Answer> answerCheckboxes = answerRepository.findAllByQuestionId(question.getQuestionId());
         answerCheckboxGroup.setItems(answerCheckboxes);
         answerCheckboxGroup.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
 

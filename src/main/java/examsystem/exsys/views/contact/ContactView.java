@@ -7,6 +7,7 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -21,26 +22,31 @@ import examsystem.exsys.views.main.MainView;
 @CssImport("styles/views/kapcsolat/kapcsolat-view.css")
 public class ContactView extends Div {
 
-    private TextField firstname = new TextField();
-    private TextField lastname = new TextField();
+    private TextField fullName = new TextField();
     private TextField email = new TextField();
-    private TextArea notes = new TextArea();
+    private TextArea message = new TextArea();
 
-    private Button cancel = new Button("Cancel");
-    private Button save = new Button("Save");
+    private Button send = new Button("Küldés");
 
     public ContactView() {
         setId("kapcsolat-view");
         VerticalLayout wrapper = createWrapper();
+        VerticalLayout container = new VerticalLayout();
 
         createTitle(wrapper);
+        createParagraph(wrapper, "Ha akármilyen problémája, kérdése merül fel, akkor érdeklődjön az alább megadott elérhetőségeken vagy küldjön nekünk üzenetet az adatlap kitöltésével.");
+        createParagraph(wrapper,"Email: info@exsys.hu");
+        createParagraph(wrapper,"Telefon: +36 30 556 8315");
         createFormLayout(wrapper);
         createButtonLayout(wrapper);
-        add(wrapper);
+        wrapper.setWidth("90%");
+        container.add(wrapper);
+        container.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
+        add(container);
     }
 
     private void createTitle(VerticalLayout wrapper) {
-        H1 h1 = new H1("Form");
+        H1 h1 = new H1("Kapcsolat");
         wrapper.add(h1);
     }
 
@@ -50,17 +56,22 @@ public class ContactView extends Div {
         wrapper.setSpacing(false);
         return wrapper;
     }
+    private void createParagraph(VerticalLayout wrapper, String text){
+        Paragraph paragraph = new Paragraph(text);
+        wrapper.add(paragraph);
+    }
 
     private void createFormLayout(VerticalLayout wrapper) {
         FormLayout formLayout = new FormLayout();
-        addFormItem(wrapper, formLayout, firstname, "First name");
-        addFormItem(wrapper, formLayout, lastname, "Last name");
+        FormLayout.FormItem nameFormItem = addFormItem(wrapper, formLayout,
+                fullName, "Név");
+        formLayout.setColspan(nameFormItem, 1);
         FormLayout.FormItem emailFormItem = addFormItem(wrapper, formLayout,
                 email, "Email");
-        formLayout.setColspan(emailFormItem, 2);
-        FormLayout.FormItem notesFormItem = addFormItem(wrapper, formLayout,
-                notes, "Notes");
-        formLayout.setColspan(notesFormItem, 2);
+        formLayout.setColspan(emailFormItem, 1);
+        FormLayout.FormItem messageFormItem = addFormItem(wrapper, formLayout,
+                message, "Üzenet");
+        formLayout.setColspan(messageFormItem, 2);
     }
 
     private void createButtonLayout(VerticalLayout wrapper) {
@@ -69,10 +80,8 @@ public class ContactView extends Div {
         buttonLayout.setWidthFull();
         buttonLayout
                 .setJustifyContentMode(FlexComponent.JustifyContentMode.END);
-        cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        buttonLayout.add(cancel);
-        buttonLayout.add(save);
+        send.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        buttonLayout.add(send);
         wrapper.add(buttonLayout);
     }
 

@@ -15,7 +15,7 @@ public class Question{
     public static final String FIND_ALL = "Question.findAll";
     public static final String FIND_BY_EXAM_ID = "Question.findAllByExamId";
 
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     protected int question_Id;
 
@@ -25,10 +25,6 @@ public class Question{
 
     private String questionText;
     private int attainablePoints;
-
-    @OneToMany
-    @JoinColumn(name="answer_id")
-    private List<Answer> answers;
 
     public Question() {
     }
@@ -55,14 +51,6 @@ public class Question{
 
     public void setExam(Exam exam) {
         this.exam = exam;
-    }
-
-    public List<Answer> getAnswers() {
-        return answers;
-    }
-
-    public void setAnswers(List<Answer> answers) {
-        this.answers = answers;
     }
 
     public int getAttainablePoints() {

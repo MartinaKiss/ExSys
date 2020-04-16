@@ -15,16 +15,15 @@ public class ExamResult {
     public static final String FIND_ALL = "ExamResult.findAll";
     public static final String FIND_BY_EXAM_ID = "ExamResult.findAllByExamId";
 
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private int examResultId;
     private String examName;
     private String subject;
     private String teacherId;
     private String studentName;
-    private String studentNeptune;
+    private String studentNeptun;
     private String studentEmail;
-    private int examSheetId;
     private int sumOfMaxPoints;
     private int sumOfAttainedPoints;
     private int attainedGrade;
@@ -76,12 +75,12 @@ public class ExamResult {
         this.studentName = studentName;
     }
 
-    public String getStudentNeptune() {
-        return studentNeptune;
+    public String getStudentNeptun() {
+        return studentNeptun;
     }
 
-    public void setStudentNeptune(String studentNeptune) {
-        this.studentNeptune = studentNeptune;
+    public void setStudentNeptun(String studentNeptune) {
+        this.studentNeptun = studentNeptune;
     }
 
     public String getStudentEmail() {
@@ -90,14 +89,6 @@ public class ExamResult {
 
     public void setStudentEmail(String studentEmail) {
         this.studentEmail = studentEmail;
-    }
-
-    public int getExamSheetId() {
-        return examSheetId;
-    }
-
-    public void setExamSheetId(int examSheetId) {
-        this.examSheetId = examSheetId;
     }
 
     public int getSumOfMaxPoints() {

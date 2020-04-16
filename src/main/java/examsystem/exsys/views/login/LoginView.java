@@ -11,11 +11,12 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.component.textfield.PasswordField;
-import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.VaadinSession;
 import examsystem.exsys.backend.repositories.TeacherRepository;
 import examsystem.exsys.views.main.MainView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 @PageTitle("Bejelentkezés")
 @CssImport("styles/views/vizsgalétrehozása/vizsgalétrehozása-view.css")
 public class LoginView extends Div {
+
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "";
 
     @Autowired
     TeacherRepository teacherRepository;
@@ -53,7 +57,15 @@ public class LoginView extends Div {
         wrapper.setWidth("90%");
 
         loginButton.addClickListener(e -> {
-            Notification.show("Not implemented");
+//            private static final long serialVersionUID = 1L;
+//            if(VaadinloginUI.AUTH.authenticate(email.getValue(), password.getValue())){
+//                VaadinSession.getCurrent().setAttribute("user", email.getValue());
+//                getUI().getNavigator().addView(SecurePage.NAME, SecurePage.class);
+//                getUI().getNavigator().addView(OtherSecurePage.NAME, OtherSecurePage.class);
+//                Page.getCurrent().setUriFragment("!"+SecurePage.NAME);
+//            }else{
+//                Notification.show("Invalid credentials", Notification.Type.ERROR_MESSAGE);
+//            }
         });
 
 

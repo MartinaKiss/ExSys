@@ -16,7 +16,6 @@ import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import examsystem.exsys.backend.Entities.Teacher;
 import examsystem.exsys.backend.repositories.TeacherRepository;
 import examsystem.exsys.views.main.MainView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +24,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 @PageTitle("Vizsga létrehozása")
 @CssImport("styles/views/vizsgalétrehozása/vizsgalétrehozása-view.css")
 public class CreateExamView extends Div {
+
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "Secure";
 
     @Autowired
     TeacherRepository teacherRepository;
@@ -53,8 +55,6 @@ public class CreateExamView extends Div {
         VerticalLayout container = new VerticalLayout();
 
         container.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
-        container.setHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
-        container.setAlignItems(FlexComponent.Alignment.CENTER);
 
         container.add(wrapper);
 
@@ -85,7 +85,9 @@ public class CreateExamView extends Div {
         FormLayout.FormItem examSubjectFormItem = addFormItem(wrapper, formLayout,
                 examSubject, "Vizsga tárgy");
         formLayout.setColspan(examSubjectFormItem, 2);
-        FormLayout.FormItem numberOfQuestionsFormItem = addFormItem(wrapper, formLayout, numberOfQuestions, "Kérdések száma");
+        FormLayout.FormItem numberOfQuestionsFormItem = addFormItem(wrapper, formLayout,
+                numberOfQuestions, "Kérdések száma");
+        formLayout.setColspan(numberOfQuestionsFormItem, 1);
 
     }
 

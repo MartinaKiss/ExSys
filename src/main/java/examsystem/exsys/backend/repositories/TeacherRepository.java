@@ -1,18 +1,38 @@
 package examsystem.exsys.backend.repositories;
 
 import examsystem.exsys.backend.Entities.Teacher;
+import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.util.List;
 
-public interface TeacherRepository {
+@Transactional
+@Repository
+public class TeacherRepository {
 
-    List<Teacher> findAll();
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    void save(Teacher teacher);
+    public List<Teacher> findAll() {
+        return entityManager.createNamedQuery(Teacher.FIND_ALL).getResultList();
+    }
 
-    void update(Teacher teacher) throws Exception;
+    public void save(Teacher teacher) {
+        entityManager.persist(teacher);
+    }
 
-    void delete(int id) throws Exception;
+    public void delete(Teacher teacher) {
+        entityManager.remove(findById(teacher.getTeacherId()));
 
-    Teacher findById(int id) throws Exception;
+    }
+
+    public void update(Teacher teacher) {
+        entityManager.merge(teacher);
+    }
+
+    public Teacher findById(int id) {
+        return entityManager.find(Teacher.class, id);
+    }
 }

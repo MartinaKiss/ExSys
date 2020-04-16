@@ -1,37 +1,50 @@
 package examsystem.exsys.backend.Entities;
 
-import examsystem.exsys.backend.ExamElements.Exam;
-
 import javax.persistence.*;
-import java.util.List;
 
 @NamedQuery(name = Teacher.FIND_ALL, query = "select n from Teacher n")
+
 
 @Table
 @Entity
 public class Teacher {
     public static final String FIND_ALL = "Teacher.findAll";
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int teacherId;
-    private String teacherName;
+    private String teacherFirstName;
+    private String teacherLastName;
+    private String teacherTitle;
     private String neptunCode;
     private String emailAddress;
-
-    @OneToMany
-    @JoinColumn(name="exam_id")
-    private List<Exam> exams;
     private String password;
 
     public Teacher() {
     }
 
-    public String getTeacherName() {
-        return teacherName;
+    public String getTeacherFirstName() {
+        return teacherFirstName;
     }
 
-    public void setTeacherName(String name) {
-        this.teacherName= name;
+    public void setTeacherFirstName(String name) {
+        this.teacherFirstName= name;
+    }
+
+    public String getTeacherLastName() {
+        return teacherLastName;
+    }
+
+    public void setTeacherLastName(String teacherLastName) {
+        this.teacherLastName = teacherLastName;
+    }
+
+    public String getTeacherTitle() {
+        return teacherTitle;
+    }
+
+    public void setTeacherTitle(String teacherTitle) {
+        this.teacherTitle = teacherTitle;
     }
 
     public String getNeptunCode() {
@@ -40,14 +53,6 @@ public class Teacher {
 
     public void setNeptunCode(String neptunCode) {
         this.neptunCode = neptunCode;
-    }
-
-    public List<Exam> getExams() {
-        return exams;
-    }
-
-    public void setExams(List<Exam> exams) {
-        this.exams = exams;
     }
 
     public String getEmailAddress() {
