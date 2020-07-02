@@ -27,7 +27,7 @@ import com.vaadin.flow.server.VaadinRequest;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
-import examsystem.exsys.backend.Authentication;
+
 import examsystem.exsys.views.addotherdata.AddOtherDataView;
 import examsystem.exsys.views.addquestions.AddQuestionsView;
 import examsystem.exsys.views.contact.ContactView;
@@ -71,6 +71,10 @@ public class MainView extends AppLayout {
 
         addToNavbar(true, new DrawerToggle(), imageContainer);
         createButtonLayout();
+
+        logout.addClickListener(e -> {
+            Notification.show("Not implemented");
+        });
 
         menu = createMenuTabs();
         addToDrawer(menu);

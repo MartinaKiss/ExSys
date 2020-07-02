@@ -1,11 +1,13 @@
 package examsystem.exsys.views.takeexam;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
@@ -14,6 +16,7 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import examsystem.exsys.backend.ExamElements.Answer;
@@ -42,31 +45,13 @@ public class TakeExamView extends Div{
     @Autowired
     private AnswerRepository answerRepository;
 
-    Grid<HorizontalLayout> grid = new Grid<>();
-
+    private TextField fullName = new TextField();
+    private TextField email = new TextField();
+    private TextField neptunCode = new TextField();
     private Exam exam = null;
     private List<Question> questions;
     private List<HorizontalLayout> questionCards;
     private Button doneButton = new Button("Feladatlap leadása");
-
-//    @Override
-//    public void setParameter(BeforeEvent beforeEvent, String s) {
-//        try {
-//            Exam exam = examRepository.findById(Integer.parseInt(s));
-//
-//            add(new Label("Exam: " + exam.getExamName()));
-//            grid.setItems(questionRepository.findAllByExamId(exam.getExamId()));
-//            grid.addColumn(Question::getQuestionId).setHeader("Id");
-//            grid.addColumn(Question::getQuestionText).setHeader("Question");
-//            grid.addColumn(Question::getAnswer1).setHeader("Answer 1");
-//            grid.addColumn(Question::getAnswer2).setHeader("Answer 2");
-//            grid.addColumn(Question::getAnswer3).setHeader("Answer 3");
-//            grid.addColumn(Question::getAnswer4).setHeader("Answer 4");
-//            add(grid);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     public TakeExamView() throws Exception {
         setId("takeexam-view");
@@ -75,6 +60,7 @@ public class TakeExamView extends Div{
         VerticalLayout wrapper = createWrapper();
         createTitle(wrapper, "Vizsga neve");
         createParagraph(wrapper, "Ide kerül be a tanár leírása arról, hogy a feladatsor kitöltése közben mire tessenek figyelni, meg ilyenek.");
+        createDataFormLayout(wrapper);
         if(!(exam == null)) {
             if(!(questionRepository.findAllByExamId(exam.getExamId()).isEmpty())) {
                 for (int i = 0; i < exam.getNumberOfQuestions(); i++) {
@@ -172,9 +158,9 @@ public class TakeExamView extends Div{
         HorizontalLayout questionHeader = new HorizontalLayout();
         questionHeader.addClassName("header");
         questionHeader.setSpacing(false);
-        Span questionHeaderText = new Span(questionIndex +". " + questionText);
+        Span questionHeaderText = new Span(questionIndex + ". " + questionText);
         questionHeaderText.addClassName("questionText");
-        questionHeader.add(questionText);
+        questionHeader.add(questionHeaderText);
 
         HorizontalLayout answersLayout = new HorizontalLayout();
         answersLayout.addClassName("answers");
@@ -186,10 +172,30 @@ public class TakeExamView extends Div{
 
         answersLayout.add(answerCheckboxGroup);
 
-
         questionCardContent.add(questionHeader, answersLayout);
         questionCard.add(questionCardContent);
         wrapper.add(questionCard);
+    }
+
+    private void createDataFormLayout(VerticalLayout wrapper) {
+        FormLayout formLayout = new FormLayout();
+        FormLayout.FormItem fullNameFormItem = addFormItem(wrapper, formLayout,
+                fullName, "Teljes név");
+        formLayout.setColspan(fullNameFormItem, 1);
+        FormLayout.FormItem emailFormItem = addFormItem(wrapper, formLayout,
+                email, "Email");
+        formLayout.setColspan(emailFormItem, 1);
+        FormLayout.FormItem neptunCodeFormItem = addFormItem(wrapper, formLayout,
+                neptunCode, "Neptun kód");
+        formLayout.setColspan(emailFormItem, 1);
+    }
+
+    private FormLayout.FormItem addFormItem(VerticalLayout wrapper,
+                                            FormLayout formLayout, Component field, String fieldName) {
+        FormLayout.FormItem formItem = formLayout.addFormItem(field, fieldName);
+        wrapper.add(formLayout);
+        field.getElement().getClassList().add("full-width");
+        return formItem;
     }
 
 }

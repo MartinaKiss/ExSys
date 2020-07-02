@@ -20,9 +20,6 @@ import examsystem.exsys.views.main.MainView;
 @CssImport("styles/views/kapcsolat/kapcsolat-view.css")
 public class HomeView extends Div {
 
-    private TextField fullName = new TextField();
-    private TextField neptuneCode = new TextField();
-    private TextField email = new TextField();
     private TextField examCode = new TextField();
 
     private Button goToExam = new Button("Tovább a vizsgára!");
@@ -34,9 +31,12 @@ public class HomeView extends Div {
         container.setAlignItems(FlexComponent.Alignment.CENTER);
 
         createTitle(wrapper,"Üdv az ExSys online vizsgarendszer oldalán");
-        createParagraph(wrapper, "A bejelentkezés menüpontra kattinva bejelenkezhet tanárként, ha pedig diákként szeretne vizsgázni, akkor azt megteheti az alábbi adatlap kitöltésével.");
-        createFormLayout(wrapper);
-        createButtonLayout(wrapper);
+        createParagraph(wrapper, "A bejelentkezés menüpontra kattinva bejelenkezhet tanárként, ha pedig diákként szeretne vizsgázni, akkor azt megteheti alább a vizsga kódjának megadásával.");
+        VerticalLayout fieldContainer = new VerticalLayout();
+        VerticalLayout buttonContainer = new VerticalLayout();
+        createFormLayout(fieldContainer);
+        createButtonLayout(buttonContainer);
+        wrapper.add(fieldContainer, buttonContainer);
         wrapper.setWidth("90%");
         container.add(wrapper);
         add(container);
@@ -61,16 +61,11 @@ public class HomeView extends Div {
 
     private void createFormLayout(VerticalLayout wrapper) {
         FormLayout formLayout = new FormLayout();
-        FormLayout.FormItem emailFormItem = addFormItem(wrapper, formLayout,
-                fullName, "Teljes Név");
-        formLayout.setColspan(emailFormItem, 2);
-        FormLayout.FormItem notesFormItem = addFormItem(wrapper, formLayout,
-                email, "Email");
-        formLayout.setColspan(notesFormItem, 2);
-        addFormItem(wrapper, formLayout, neptuneCode, "Neptun Kód");
-        addFormItem(wrapper, formLayout, examCode, "Vizsga Kódja");
-
-
+        VerticalLayout buttonContainer = new VerticalLayout();
+        FormLayout.FormItem examCodeFormItem = addFormItem(wrapper, formLayout,
+                examCode, "Vizsga kódja");
+        formLayout.setColspan(examCodeFormItem, 1);
+        wrapper.add(formLayout);
     }
 
     private void createButtonLayout(VerticalLayout wrapper) {
@@ -78,7 +73,7 @@ public class HomeView extends Div {
         buttonLayout.addClassName("button-layout");
         buttonLayout.setWidthFull();
         buttonLayout
-                .setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+                .setJustifyContentMode(FlexComponent.JustifyContentMode.START);
         goToExam.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         buttonLayout.add(goToExam);
         wrapper.add(buttonLayout);

@@ -18,17 +18,22 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import examsystem.exsys.backend.repositories.TeacherRepository;
+import examsystem.exsys.views.createexam.CreateExamView;
 import examsystem.exsys.views.main.MainView;
+import examsystem.exsys.views.myexams.MyExamsView;
 import org.springframework.beans.factory.annotation.Autowired;
+
+//TODO 1. Írj HZnak, hogy utána hozzá lehet-e nyúlni a szoftverhez, miután leadtad a szakdogát neptunban, illetve,
+//     hogy meddig és hogyan kell leadni személyesen
+//     2. Írd meg a login sessiont és ha még a napba belefér, akkor a jelszó titkosítást is. Login a mystarterprojectben
+//     nézd meg, hogy ott hogy csinálják a bejelentkezést, letöltöttem újra, ott van az asztalon meg a könyvjelzők közé
+//     is mentettem el pár hasznos cumót a login session nevű könyvjelző mappába.
 
 @Route(value = "login", layout = MainView.class)
 @PageTitle("Bejelentkezés")
 @CssImport("styles/views/vizsgalétrehozása/vizsgalétrehozása-view.css")
 public class LoginView extends Div {
-
-    private static final long serialVersionUID = 1L;
-    public static final String NAME = "";
-
+    
     @Autowired
     TeacherRepository teacherRepository;
 
@@ -57,18 +62,8 @@ public class LoginView extends Div {
         wrapper.setWidth("90%");
 
         loginButton.addClickListener(e -> {
-//            private static final long serialVersionUID = 1L;
-//            if(VaadinloginUI.AUTH.authenticate(email.getValue(), password.getValue())){
-//                VaadinSession.getCurrent().setAttribute("user", email.getValue());
-//                getUI().getNavigator().addView(SecurePage.NAME, SecurePage.class);
-//                getUI().getNavigator().addView(OtherSecurePage.NAME, OtherSecurePage.class);
-//                Page.getCurrent().setUriFragment("!"+SecurePage.NAME);
-//            }else{
-//                Notification.show("Invalid credentials", Notification.Type.ERROR_MESSAGE);
-//            }
+            Notification.show("Not implemented");
         });
-
-
         add(container);
     }
 
