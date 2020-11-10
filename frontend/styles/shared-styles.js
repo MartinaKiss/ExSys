@@ -93,7 +93,14 @@ $_documentContainer.innerHTML = `
         stroke: var(--lumo-base-color);
       }
     </style>
+    <style>
+            [part=icon]::before {
+            /* Use a custom font icon or background image */
+        }
+        </style>
   </template>
 </dom-module>`;
+
+
 
 document.head.appendChild($_documentContainer.content);
