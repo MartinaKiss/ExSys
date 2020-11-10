@@ -18,14 +18,13 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.vaadin.olli.FileDownloadWrapper;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -168,76 +167,34 @@ public class ResultView extends Div {
     }
 
     private byte[] getPDF() throws IOException {
-        String html = "<!DOCTYPE html>\n" +
-                "<html lang=\"en\">\n" +
-                "<head>\n" +
-                "    <meta charset=\"UTF-8\">\n" +
-                "    <title>Eredmény </title>\n" +
-                "</head>\n" +
-                "<body>\n" +
-                "    <h1>Eredmény</h1>\n" +
-                "    <table style=\"width:100%\">\n" +
-                "        {{#Query}}\n" +
-                "        <tr>\n" +
-                "            <td>Vizsgázó neve: </td>\n" +
-                "            <td>" + studentName + "</td>\n" +
-                "        </tr>\n" +
-                "        <tr>\n" +
-                "            <td>Vizsgázó neptun kódja: </td>\n" +
-                "            <td>" + studentNeptun + "</td>\n" +
-                "        </tr>\n" +
-                "        <tr>\n" +
-                "            <td>Vizsgázó email címe: </td>\n" +
-                "            <td>{{studentEmail}}</td>\n" +
-                "        </tr>\n" +
-                "        <tr>\n" +
-                "            <td>Vizsga tárgya, neve: </td>\n" +
-                "            <td>{{examSubject}} - {{examName}}</td>\n" +
-                "        </tr>\n" +
-                "        <tr>\n" +
-                "            <td>Vizsga dátuma: </td>\n" +
-                "            <td>{{examDate}}</td>\n" +
-                "        </tr>\n" +
-                "        <tr>\n" +
-                "            <td>Oktató neve: </td>\n" +
-                "            <td>{{teacherName}}</td>\n" +
-                "        </tr>\n" +
-                "        <tr>\n" +
-                "            <td>Vizsga eredmény azonosítója: </td>\n" +
-                "            <td>{{examResultId}}</td>\n" +
-                "        </tr>\n" +
-                "        <tr>\n" +
-                "            <td>Maximum elérhető pontok / Elért pontok: </td>\n" +
-                "            <td>{{maxPoints}} / {{attainedPoints}}</td>\n" +
-                "        </tr>\n" +
-                "        <tr>\n" +
-                "            <td>Elért jegy: </td>\n" +
-                "            <td>{{attainedMark}}</td>\n" +
-                "        </tr>\n" +
-                "    </table>\n" +
-                "</body>\n </html>";
 
         List<String> stringList = new ArrayList<>();
 
         stringList.add("Vizsgázó neve: " + studentName);
         stringList.add("Vizsgázó emailcíme: " + studentEmail);
-
-        for (String line:stringList) {
-            System.out.println(line);
-        }
+        stringList.add("Vizsga tárgya, neve: " + examSubject + " - " + examName);
+        stringList.add("Vizsga dátuma: " + examDate);
+        stringList.add("Oktató neve: " + teacherName);
+        stringList.add("Vizsga eredmény azonosítója: " + examResultId);
+        stringList.add("Maximum elérhető pontok / Elért pontok: " + maxPoints + " / " + attainedPoints);
+        stringList.add("Elért jegy: " + attainedMark);
 
         PDDocument document = new PDDocument();
         PDPage page= new PDPage();
-        PDFont pdfFont= PDType1Font.HELVETICA_BOLD;
+        File fontFile = new File("src/main/java/examsystem/exsys/Views/ttf/DejaVuLGCSans.ttf");
+        System.out.println(fontFile.getCanonicalPath());
+        PDFont dejaVuFont = PDType0Font.load(document, fontFile);
         int fontSize = 14;
         try {
             PDPageContentStream contentStream = new PDPageContentStream(document, page);
-            contentStream.setFont(pdfFont, fontSize);
-            document.addPage(page);
             contentStream.beginText();
+            contentStream.setFont(dejaVuFont, fontSize);
+            contentStream.newLineAtOffset(25, 700);
+            contentStream.setLeading(14.5f);
+            document.addPage(page);
+
             for (String line:stringList) {
                 contentStream.showText(line);
-                System.out.println("Elméletileg be lett írva, hogy: " + line);
                 contentStream.newLine();
             }
             contentStream.endText();
