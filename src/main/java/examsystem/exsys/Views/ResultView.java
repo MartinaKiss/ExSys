@@ -2,17 +2,16 @@ package examsystem.exsys.Views;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.charts.model.style.Color;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.H4;
-import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
+import com.vaadin.flow.theme.lumo.Lumo;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -20,6 +19,7 @@ import org.apache.pdfbox.pdmodel.common.PDStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.vaadin.olli.FileDownloadWrapper;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -181,23 +181,54 @@ public class ResultView extends Div {
 
         PDDocument document = new PDDocument();
         PDPage page= new PDPage();
-        File fontFile = new File("src/main/java/examsystem/exsys/Views/ttf/DejaVuLGCSans.ttf");
-        System.out.println(fontFile.getCanonicalPath());
-        PDFont dejaVuFont = PDType0Font.load(document, fontFile);
-        int fontSize = 14;
+        File sansFontFile = new File("src/main/java/examsystem/exsys/Views/ttf/DejaVuLGCSans.ttf");
+        File boldFontFile = new File("src/main/java/examsystem/exsys/Views/ttf/DejaVuLGCSans-Bold.ttf");
+        PDImageXObject logoImage = PDImageXObject.createFromFile("src/main/webapp/frontend/logoLightMode.png", document);
+        PDFont dejaVuSansFont = PDType0Font.load(document, sansFontFile);
+        PDFont dejaVuBoldFont = PDType0Font.load(document, boldFontFile);
+        int mainFontSize = 12;
+        int titleFontSize = 20;
+        int footerFontSize = 8;
+        
         try {
             PDPageContentStream contentStream = new PDPageContentStream(document, page);
-            contentStream.beginText();
-            contentStream.setFont(dejaVuFont, fontSize);
-            contentStream.newLineAtOffset(25, 700);
-            contentStream.setLeading(14.5f);
             document.addPage(page);
+            contentStream.drawImage(logoImage, 50f, 700f, 103.5f, 40.45f);
+            contentStream.setStrokingColor(0, 43, 77);
+            contentStream.setNonStrokingColor(0, 43, 77);
+            contentStream.setLineWidth(3f);
+            contentStream.moveTo(50f, 690f);
+            contentStream.lineTo(550f, 690f);
+            contentStream.stroke();
 
+            contentStream.moveTo(50f, 100f);
+            contentStream.lineTo(550f, 100f);
+            contentStream.stroke();
+
+            contentStream.beginText();
+            contentStream.setFont(dejaVuBoldFont, titleFontSize);
+            contentStream.newLineAtOffset(160.5f, 708.5f);
+            contentStream.setLeading(35f);
+            contentStream.showText("Vizsga Eredmény");
+            contentStream.endText();
+
+            contentStream.beginText();
+            contentStream.setFont(dejaVuSansFont, mainFontSize);
+            contentStream.newLineAtOffset(50, 650);
+            contentStream.setLeading(35f);
             for (String line:stringList) {
                 contentStream.showText(line);
                 contentStream.newLine();
             }
             contentStream.endText();
+
+            contentStream.beginText();
+            contentStream.setFont(dejaVuSansFont, footerFontSize);
+            contentStream.newLineAtOffset(50, 80);
+            contentStream.setLeading(14f);
+            contentStream.showText("Kérjük örizze meg a tanusítványt ameddig a vizsgán elért jegy helyesen rögzítésre nem kerül a tanulmányi rendszerben.");
+            contentStream.newLine();
+            contentStream.showText("Ez a tanusítvány igazolja az fent említett hallgató viszgán való részvételét és a vizsgán elért eredményét.");
             contentStream.close();
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             document.save(os);
@@ -208,10 +239,4 @@ public class ResultView extends Div {
         }
         return null;
     }
-
-
-    private void createDownloadablePDF () {
-
-    }
-
 }

@@ -46,8 +46,8 @@ public class MainTemplateView extends AppLayout {
 
     public MainTemplateView() {
         HorizontalLayout imageContainer = new HorizontalLayout();
-        Image logo = new Image("frontend/logo.png", "ExSys Logo");
-        logo.setWidth("80%");
+        Image logo = new Image("frontend/logoDarkMode.png", "ExSys Logo");
+        logo.setWidth("100%");
         imageContainer.add(logo);
         imageContainer.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         imageContainer.setHeight("150%");
