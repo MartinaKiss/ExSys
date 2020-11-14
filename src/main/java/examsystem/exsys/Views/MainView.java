@@ -1,6 +1,7 @@
 package examsystem.exsys.Views;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -16,6 +17,7 @@ import com.vaadin.flow.router.Route;
 import examsystem.exsys.ExamElements.Exam;
 import examsystem.exsys.Repositories.ExamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 @Route(value = "", layout = MainTemplateView.class)
 @PageTitle("Főoldal")
@@ -52,9 +54,12 @@ public class MainView extends Div {
         wrapper.setWidth("90%");
         container.add(wrapper);
         goToExam.addClickListener(e -> {
-            Notification.show(examCode.getValue());
-            Exam destinationExam = examRepository.findByEnterExamCode(examCode.getValue());
-            Notification.show(destinationExam.getExamName());
+            try {
+                Exam destinationExam = examRepository.findByEnterExamCode(examCode.getValue());
+                UI.getCurrent().navigate("takeexam/" + destinationExam.getEnterExamCode());
+            }catch (EmptyResultDataAccessException exception){
+                Notification.show("Helytelen beléptető kód.");
+            }
         });
         add(container);
     }

@@ -1,6 +1,7 @@
 package examsystem.exsys.Views;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -14,15 +15,20 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
+import examsystem.exsys.Entities.Teacher;
+import examsystem.exsys.ExamElements.Exam;
+import examsystem.exsys.Repositories.ExamRepository;
 import examsystem.exsys.Repositories.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.annotation.PostConstruct;
+import java.util.Optional;
 
 @Route(value = "createexam", layout = MainTemplateView.class)
 @PageTitle("Vizsga létrehozása")
 @CssImport("styles/views/vizsgalétrehozása/vizsgalétrehozása-view.css")
-public class CreateExamView extends Div {
+public class CreateExamView extends Div implements HasUrlParameter<String> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "Secure";
@@ -30,13 +36,36 @@ public class CreateExamView extends Div {
     @Autowired
     TeacherRepository teacherRepository;
 
+    @Autowired
+    ExamRepository examRepository;
+
+    private Teacher teacher;
+    private Exam newExam;
     private TextField examName = new TextField();
     private TextField examSubject = new TextField();
-    private NumberField numberOfQuestions = new NumberField();
 
     private Button nextButton = new Button("Tovább");
 
-    public CreateExamView() {
+    @Override
+    public void setParameter(BeforeEvent beforeEvent, @OptionalParameter String s) {
+        if(s != null) {
+            try {
+                newExam = examRepository.findById(Integer.parseInt(s));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            newExam = new Exam();
+        }
+    }
+
+    @PostConstruct
+    public void init() {
+        //todo delete this when session is done
+        teacher = teacherRepository.findById(2);
+        //
+
         setId("vizsgalétrehozása-view");
         VerticalLayout wrapper = createWrapper();
 
@@ -58,7 +87,16 @@ public class CreateExamView extends Div {
         container.add(wrapper);
 
         nextButton.addClickListener(e -> {
-            Notification.show("Not implemented");
+            newExam.setTeacher(teacher);
+            newExam.setExamName(examName.getValue());
+            newExam.setSubject(examSubject.getValue());
+            if(newExam.getExamId() == 0) {
+                examRepository.save(newExam);
+            }
+            else{
+                examRepository.update(newExam);
+            }
+            UI.getCurrent().navigate("addquestions/" + newExam.getExamId());
         });
 
         add(container);
@@ -84,10 +122,6 @@ public class CreateExamView extends Div {
         FormLayout.FormItem examSubjectFormItem = addFormItem(wrapper, formLayout,
                 examSubject, "Vizsga tárgy");
         formLayout.setColspan(examSubjectFormItem, 2);
-        FormLayout.FormItem numberOfQuestionsFormItem = addFormItem(wrapper, formLayout,
-                numberOfQuestions, "Kérdések száma");
-        formLayout.setColspan(numberOfQuestionsFormItem, 1);
-
     }
 
     private void createButtonLayout(VerticalLayout wrapper) {

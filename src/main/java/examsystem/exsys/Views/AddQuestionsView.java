@@ -1,175 +1,131 @@
 package examsystem.exsys.Views;
 
-import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.Paragraph;
-import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.NumberField;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
+import examsystem.exsys.Components.QuestionForm;
+import examsystem.exsys.ExamElements.Exam;
+import examsystem.exsys.ExamElements.Question;
+import examsystem.exsys.Repositories.ExamRepository;
+import examsystem.exsys.Repositories.QuestionRepository;
+import examsystem.exsys.Views.ViewComponents.Reloader;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@Route(value = "addquestions", layout = MainTemplateView.class)
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
+
+@Route(value = "addquestions", layout = SecondaryTemplateView.class)
 @PageTitle("Kérdések hozzáadása")
 @CssImport("styles/views/tvkérdésekhozzáadása/t-vkérdésekhozzáadása-view.css")
-public class AddQuestionsView extends Div {
-    private static final long serialVersionUID = 1L;
-    public static final String NAME = "Secure";
+public class AddQuestionsView extends Div implements HasUrlParameter<String>, Reloader, AfterNavigationObserver{
 
-    private Button cancel = new Button("Mégse");
-    private Button nextButton = new Button("Tovább");
-    private int numberOfQuestions = 8;
+    @Autowired
+    private QuestionRepository questionRepository;
 
-    public AddQuestionsView() {
-        setId("addquestions-view");
-        VerticalLayout wrapper = createWrapper();
+    @Autowired
+    private ExamRepository examRepository;
 
-        createTitle(wrapper);
-        createParagraph(wrapper, "Itt adhatja meg a feladatsor kérdéseit, a hozzájuk tartozó válaszokat és a " +
-                "kérdésekért kapható pontokat. A válaszok sorai mellet lévő checkbox-ot bepipálva tudja megjelölni a jó " +
-                "válaszokat. Több jó válasz is megadható. Ha végzett a kérdések bevítelével és alaposan leellenőrizte " +
-                "azokat, akkor a Tovább gombra kattintva léphet tovább az utolsó lépésre, ahol megadhatja a vizsga " +
-                "ponthatárait, azt, hogy a helytelen válaszokért kerüljön-e pont levonásra, illetve hogy mennyi pont " +
-                "kerüljön levonásra.");
+    @Autowired
+    private QuestionForm form;
 
-        for(int i = 0; i<8; i++) {
-            createFormLayout(wrapper, i+1);
+    private Grid<Question> grid;
+
+    private Exam exam;
+
+    @Override
+    public void setParameter(BeforeEvent beforeEvent, String s) {
+        try {
+            exam = examRepository.findById(Integer.parseInt(s));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        createButtonLayout(wrapper);
+    }
 
-        nextButton.addClickListener(e -> {
-            Notification.show("Not implemented");
+    @PostConstruct
+    public void init() {
+        VerticalLayout container = new VerticalLayout();
+
+        HorizontalLayout buttonContainer = new HorizontalLayout();
+        VerticalLayout buttonWrapper1 = new VerticalLayout();
+        VerticalLayout buttonWrapper2 = new VerticalLayout();
+
+        grid = new Grid<>(Question.class);
+        setHeightFull();
+        grid.removeAllColumns();
+        grid.addColumn(Question::getQuestionText).setHeader("Kérdés szövege").setAutoWidth(true);
+        grid.addColumn(Question::getAttainablePoints).setHeader("Elérhető pontszám").setAutoWidth(true);
+        grid.addColumn(Question::getAnswer1).setHeader("1. válasz").setAutoWidth(true);
+        grid.addColumn(Question::getAnswer2).setHeader("2. válasz").setAutoWidth(true);
+        grid.addColumn(Question::getAnswer3).setHeader("3. válasz").setAutoWidth(true);
+        grid.addColumn(Question::getAnswer4).setHeader("4. válasz").setAutoWidth(true);
+        grid.addColumn(Question::getSolution).setHeader("Megoldás").setAutoWidth(true);
+
+
+        grid.asSingleSelect().addValueChangeListener(e -> {
+            if (e.getValue() != null) {
+                form.initEdit(e.getValue().getQuestionId());
+            }
+        });
+        Button addButton = new Button("Új kérdés hozzáadása", VaadinIcon.PLUS.create());
+        addButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        addButton.addClickListener(event -> form.initSave(exam));
+
+        Button nextButton = new Button("Következő", VaadinIcon.ARROW_RIGHT.create());
+        nextButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        nextButton.addClickListener(event -> {
+            try {
+                List<Question> questionList = new ArrayList<>(questionRepository.findAllByExamId(exam.getExamId()));
+                double maxSumOfPoints = 0.0;
+                for (Question question : questionList) {
+                    maxSumOfPoints = maxSumOfPoints + question.getAttainablePoints();
+                }
+                System.out.println("Max sum of points: " + maxSumOfPoints);
+                exam.setMaxSumOfPoints(maxSumOfPoints);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+            examRepository.update(exam);
+            UI.getCurrent().navigate("addotherdataview/" + exam.getExamId());
         });
 
-        wrapper.setWidth("90%");
-        VerticalLayout container = new VerticalLayout();
-        container.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
-        container.setHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
+        buttonWrapper1.add(addButton);
+        buttonWrapper1.setAlignItems(FlexComponent.Alignment.START);
+        buttonWrapper2.add(nextButton);
+        buttonWrapper2.setAlignItems(FlexComponent.Alignment.END);
+        buttonContainer.add(buttonWrapper1, buttonWrapper2);
+        buttonContainer.setVerticalComponentAlignment(FlexComponent.Alignment.STRETCH);
+        buttonContainer.setAlignItems(FlexComponent.Alignment.STRETCH);
+        buttonContainer.setWidth("100%");
+        form.setReloader(this);
+        container.add(grid);
+        container.add(buttonContainer);
         container.setAlignItems(FlexComponent.Alignment.CENTER);
-        container.add(wrapper);
+        container.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
+        container.setAlignSelf(FlexComponent.Alignment.CENTER);
         add(container);
+        add(form);
     }
 
-    private void createTitle(VerticalLayout wrapper) {
-        H1 h1 = new H1("Kérdések hozzáadása");
-        wrapper.add(h1);
+    @Override
+    public void reload() throws Exception {
+        grid.setItems(questionRepository.findAllByExamId(exam.getExamId()));
     }
 
-    private VerticalLayout createWrapper() {
-        VerticalLayout wrapper = new VerticalLayout();
-        wrapper.setId("wrapper");
-        wrapper.setSpacing(true);
-        return wrapper;
+    @Override
+    public void afterNavigation(AfterNavigationEvent event) {
+        try {
+            grid.setItems(questionRepository.findAllByExamId(exam.getExamId()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-
-    private void createParagraph(VerticalLayout wrapper, String text){
-        Paragraph paragraph = new Paragraph(text);
-        wrapper.add(paragraph);
-    }
-
-    private void createFormLayout(VerticalLayout wrapper, int index) {
-        FormLayout formLayout = new FormLayout();
-        formLayout.addClassName("question_card");
-
-        HorizontalLayout questionHeader = new HorizontalLayout();
-        questionHeader.addClassName("header");
-        questionHeader.setSpacing(false);
-        Span questionText = new Span(index + ". kérdés: ");
-        questionText.addClassName("questionText");
-        TextField questionTextField = new TextField();
-        questionHeader.add(questionText, questionTextField);
-
-        VerticalLayout answersLayout = new VerticalLayout();
-        answersLayout.addClassName("answers");
-        answersLayout.setSpacing(true);
-
-        TextField answer1 = new TextField();
-        TextField answer2 = new TextField();
-        TextField answer3 = new TextField();
-        TextField answer4 = new TextField();
-        Checkbox checkbox1 = new Checkbox();
-        Checkbox checkbox2 = new Checkbox();
-        Checkbox checkbox3 = new Checkbox();
-        Checkbox checkbox4 = new Checkbox();
-        NumberField pointsForQuestion = new NumberField();
-
-        FormLayout.FormItem questionTextFormItem = addFormItem(wrapper, formLayout,
-                questionTextField, index + ". Kérdés szövege");
-        formLayout.setColspan(questionTextFormItem, 2);
-
-        VerticalLayout answerContainer = new VerticalLayout();
-        HorizontalLayout answerLine1 = new HorizontalLayout();
-        FormLayout.FormItem answer1FormItem = addFormItem(wrapper, formLayout,
-                answer1, "1. válasz szövege");
-        formLayout.setColspan(answer1FormItem, 3);
-        answerLine1.add(answer1FormItem, checkbox1);
-        answerLine1.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
-
-        HorizontalLayout answerLine2 = new HorizontalLayout();
-        FormLayout.FormItem answer2FormItem = addFormItem(wrapper, formLayout,
-                answer2, "2. válasz szövege");
-        formLayout.setColspan(answer2FormItem, 3);
-        answerLine2.add(answer2FormItem, checkbox2);
-        answerLine2.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
-
-        HorizontalLayout answerLine3 = new HorizontalLayout();
-        FormLayout.FormItem answer3FormItem = addFormItem(wrapper, formLayout,
-                answer3, "3. válasz szövege");
-        formLayout.setColspan(answer3FormItem, 3);
-        answerLine3.add(answer3FormItem, checkbox3);
-        answerLine3.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
-
-        HorizontalLayout answerLine4 = new HorizontalLayout();
-        FormLayout.FormItem answer4FormItem = addFormItem(wrapper, formLayout,
-                answer4, "4. válasz szövege");
-        formLayout.setColspan(answer4FormItem, 3);
-        answerLine4.add(answer4FormItem, checkbox4);
-        answerLine4.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
-
-        HorizontalLayout pointsContainer = new HorizontalLayout();
-        FormLayout.FormItem pointsFormItem = addFormItem(wrapper, formLayout,
-                pointsForQuestion, "Pontszám");
-        formLayout.setColspan(pointsFormItem, 1);
-        pointsContainer.add(pointsFormItem);
-
-        answerContainer.add(answerLine1, answerLine2, answerLine3, answerLine4, pointsContainer);
-        answerContainer.setWidth("90%");
-        VerticalLayout outerAnswersContainer = new VerticalLayout();
-        outerAnswersContainer.add(answerContainer);
-        outerAnswersContainer.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
-        formLayout.add(questionTextFormItem, outerAnswersContainer);
-        wrapper.add(formLayout);
-    }
-
-    private void createButtonLayout(VerticalLayout wrapper) {
-        HorizontalLayout buttonLayout = new HorizontalLayout();
-        buttonLayout.addClassName("button-layout");
-        buttonLayout.setWidthFull();
-        buttonLayout
-                .setJustifyContentMode(FlexComponent.JustifyContentMode.END);
-        cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        nextButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        buttonLayout.add(cancel);
-        buttonLayout.add(nextButton);
-        wrapper.add(buttonLayout);
-    }
-
-    private FormLayout.FormItem addFormItem(VerticalLayout wrapper,
-            FormLayout formLayout, Component field, String fieldName) {
-        FormLayout.FormItem formItem = formLayout.addFormItem(field, fieldName);
-        wrapper.add(formLayout);
-        field.getElement().getClassList().add("full-width");
-        return formItem;
-    }
-
 }

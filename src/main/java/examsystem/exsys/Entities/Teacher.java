@@ -11,8 +11,9 @@ public class Teacher {
     public static final String FIND_ALL = "Teacher.findAll";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int teacherId;
+
     private String teacherFirstName;
     private String teacherLastName;
     private String teacherTitle;

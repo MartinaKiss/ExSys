@@ -15,6 +15,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import examsystem.exsys.Entities.Teacher;
@@ -41,80 +42,16 @@ public class RegisterView extends Div {
     private PasswordField passwordAgain = new PasswordField();
 
     private Teacher teacher;
-//    private Binder<Teacher> binder;
+    private Binder<Teacher> binder;
 
     private Button registerButton = new Button("Regisztráció");
 
     @PostConstruct
     public void Init() {
+        binder = new Binder<>(Teacher.class);
         setId("register-view");
-//        binder=new Binder<>(Teacher.class);
-
         teacherTitle.setItems("-", "Dr.");
         teacherTitle.setValue("-");
-
-        firstName.addValueChangeListener(event -> {
-            String origin = event.isFromClient()
-                    ? "by the user"
-                    : "from code";
-            String message = "firstName is " + event.getValue()
-                    + " as set " + origin;
-            Notification.show(message);
-        });
-
-        lastName.addValueChangeListener(event -> {
-            String origin = event.isFromClient()
-                    ? "by the user"
-                    : "from code";
-            String message = "lastName is " + event.getValue()
-                    + " as set " + origin;
-            Notification.show(message);
-        });
-
-        neptunCode.addValueChangeListener(event -> {
-            String origin = event.isFromClient()
-                    ? "by the user"
-                    : "from code";
-            String message = "NeptunCode is " + event.getValue()
-                    + " as set " + origin;
-            Notification.show(message);
-        });
-
-        teacherTitle.addValueChangeListener(event -> {
-            String origin = event.isFromClient()
-                    ? "by the user"
-                    : "from code";
-            String message = "Title is " + event.getValue()
-                    + " as set " + origin;
-            Notification.show(message);
-        });
-
-        email.addValueChangeListener(event -> {
-            String origin = event.isFromClient()
-                    ? "by the user"
-                    : "from code";
-            String message = "Email is " + event.getValue()
-                    + " as set " + origin;
-            Notification.show(message);
-        });
-
-        password.addValueChangeListener(event -> {
-            String origin = event.isFromClient()
-                    ? "by the user"
-                    : "from code";
-            String message = "Password is " + event.getValue()
-                    + " as set " + origin;
-            Notification.show(message);
-        });
-
-        passwordAgain.addValueChangeListener(event -> {
-            String origin = event.isFromClient()
-                    ? "by the user"
-                    : "from code";
-            String message = "PasswordAgain is " + event.getValue()
-                    + " as set " + origin;
-            Notification.show(message);
-        });
 
         Div value = new Div();
         value.setText("Select a value");
@@ -152,6 +89,7 @@ public class RegisterView extends Div {
                             teacher.setEmailAddress(email.getValue());
                             teacher.setPassword(password.getValue());
                             teacherRepository.save(teacher);
+
                             Notification.show("Sikeres regisztráció");
 
                         } else {
@@ -171,37 +109,10 @@ public class RegisterView extends Div {
             }
         });
 
-//        binder.bindInstanceFields(this);
+        binder.bindInstanceFields(this);
         wrapper.setWidth("90%");
         container.add(wrapper);
         add(container);
-    }
-
-    public void initSave() {
-        teacher = new Teacher();
-//        binder.setBean(teacher);
-        setVisible(true);
-    }
-
-    public void initEdit(int id) {
-
-        try {
-            this.teacher = teacherRepository.findById(id);
-//            binder.setBean(teacher);
-            setVisible(true);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public void setTeacher(Teacher teacher) {
-        if(teacher!=null){
-            this.teacher = teacher;
-//            binder.setBean(this.teacher);
-        }
-        this.teacher= teacher;
     }
 
     private void createTitle(VerticalLayout wrapper, String text) {

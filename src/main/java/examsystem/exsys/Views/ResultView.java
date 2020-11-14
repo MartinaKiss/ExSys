@@ -8,10 +8,13 @@ import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.theme.lumo.Lumo;
+import examsystem.exsys.Entities.Teacher;
+import examsystem.exsys.ExamElements.ExamResult;
+import examsystem.exsys.Repositories.ResultRepository;
+import examsystem.exsys.Repositories.TeacherRepository;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -20,6 +23,7 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.olli.FileDownloadWrapper;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -27,76 +31,93 @@ import javax.xml.transform.TransformerException;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-@Route(value = "result", layout = MainTemplateView.class)
+@Route(value = "result", layout = SecondaryTemplateView.class)
 @PageTitle("Eredmény")
 @CssImport("styles/views/eredmény/eredmény-view.css")
-public class ResultView extends Div {
+public class ResultView extends Div implements HasUrlParameter<String>, AfterNavigationObserver {
 
-    private String pattern = "yyyy-MM-dd hh:mm";
-    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-    private Date examDate = simpleDateFormat.parse("2020-04-15 09:00");
+    @Autowired
+    ResultRepository resultRepository;
 
-    private String studentName = "Kiss Martina";
-    private String studentNeptun = "W94PVA";
-    private String studentEmail = "kissmartina97@gmail.com";
-    private String examSubject = "Diszkrét Matematika II.";
-    private String examName = "Félév végi zárthelyi dolgozat";
-    private String teacherName = "Dr. Jenei Sándor";
-    private int examResultId = 69420;
-    private int attainedPoints = 69;
-    private int maxPoints = 71;
-    private int attainedMark = 5;
+    @Autowired
+    TeacherRepository teacherRepository;
+
+    private ExamResult examResult;
+    private Teacher teacher;
+
+    private VerticalLayout wrapper;
 
     private Button backToMain = new Button("Vissza a főoldalra");
 
-    public ResultView() throws ParseException, TransformerException, ParserConfigurationException {
+    @Override
+    public void setParameter(BeforeEvent beforeEvent, String s) {
+        try {
+            examResult = resultRepository.findById(Integer.parseInt(s));
+            teacher = teacherRepository.findById(examResult.getTeacherId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void afterNavigation(AfterNavigationEvent event) {
+        try {
+            createTitle(wrapper,"Eredmény");
+            createParagraph(wrapper, "Vizsgázó neve: ", examResult.getStudentName());
+            createParagraph(wrapper, "Vizsgázó neptun kódja: ", examResult.getStudentNeptun());
+            createParagraph(wrapper, "Vizsgázó email címe: ", examResult.getStudentEmail());
+            createParagraph(wrapper, "Vizsga tárgya, neve: ", examResult.getSubject() + " - " + examResult.getExamName());
+            createParagraph(wrapper, "Vizsga dátuma: ", DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).format(examResult.getTimeOfSubmission()));
+            if(teacher.getTeacherTitle().equals("")) {
+                createParagraph(wrapper, "Oktató neve: ", teacher.getTeacherLastName() + " " + teacher.getTeacherFirstName());
+            }
+            else {
+                createParagraph(wrapper, "Oktató neve: ", teacher.getTeacherTitle() + " " + teacher.getTeacherLastName() + " " + teacher.getTeacherFirstName());
+            }
+            createParagraph(wrapper, "Maximum elérhető pontok / Elért pontok: ", examResult.getSumOfMaxPoints() + "/" + examResult.getSumOfAttainedPoints());
+            createParagraph(wrapper, "Elért jegy: ", examResult.getAttainedGrade());
+
+            Paragraph paragraph1 = new Paragraph("A fenti tanusítványt kérjük töltse le az alábbi gombra kattintva:");
+            wrapper.add(paragraph1);
+
+            Button download = new Button("Tanusítvány letöltése");
+            download.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+            FileDownloadWrapper buttonWrapper = new FileDownloadWrapper(
+                    new StreamResource(String.valueOf(examResult.getExamResultId()).concat(".pdf"), () -> {
+                        try {
+                            return new ByteArrayInputStream(getPDF());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    })
+            );
+
+            buttonWrapper.wrapComponent(download);
+
+            wrapper.add(buttonWrapper);
+
+            Paragraph paragraph2 = new Paragraph("A letöltött tanusítványt őrízze meg a jegy rögzítéséig, hogy igazolni tudja a vizsgán való részvételét és az elért eredményét.");
+            wrapper.add(paragraph2);
+            createButtonLayout(wrapper);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ResultView() {
         setId("result-view");
-        VerticalLayout wrapper = createWrapper();
+        wrapper = createWrapper();
         VerticalLayout container = new VerticalLayout();
         wrapper.setWidth("90%");
         container.setAlignItems(FlexComponent.Alignment.CENTER);
-
-        createTitle(wrapper,"Eredmény");
-        createParagraph(wrapper, "Vizsgázó neve: ", studentName);
-        createParagraph(wrapper, "Vizsgázó neptun kódja: ", studentNeptun);
-        createParagraph(wrapper, "Vizsgázó email címe: ", studentEmail);
-        createParagraph(wrapper, "Vizsga tárgya, neve: ", examSubject, "-", examName);
-        createParagraph(wrapper, "Vizsga dátuma:", examDate.toString());
-        createParagraph(wrapper, "Oktató neve: ", teacherName);
-        createParagraph(wrapper, "Vizsga eredmény azonosítója: ", examResultId);
-        createParagraph(wrapper, "Maximum elérhető pontok / Elért pontok: ", maxPoints, "/", attainedPoints);
-        createParagraph(wrapper, "Elért jegy: ", attainedMark);
-
-        Paragraph paragraph1 = new Paragraph("A fenti tanusítványt kérjük töltse le az alábbi gombra kattintva:");
-        wrapper.add(paragraph1);
-
-        Button download = new Button("Tanusítvány letöltése");
-        download.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-
-        FileDownloadWrapper buttonWrapper = new FileDownloadWrapper(
-//                new StreamResource("foo.txt", () -> new ByteArrayInputStream("foo.txt".getBytes())));
-                new StreamResource(String.valueOf(examResultId).concat(".pdf"), () -> {
-                    try {
-                        return new ByteArrayInputStream(getPDF());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                })
-        );
-
-        buttonWrapper.wrapComponent(download);
-
-        wrapper.add(buttonWrapper);
-
-        Paragraph paragraph2 = new Paragraph("A letöltött tanusítványt őrízze meg a jegy rögzítéséig, hogy igazolni tudja a vizsgán való részvételét és az elért eredményét.");
-        wrapper.add(paragraph2);
-        createButtonLayout(wrapper);
         container.add(wrapper);
         add(container);
     }
@@ -170,14 +191,19 @@ public class ResultView extends Div {
 
         List<String> stringList = new ArrayList<>();
 
-        stringList.add("Vizsgázó neve: " + studentName);
-        stringList.add("Vizsgázó emailcíme: " + studentEmail);
-        stringList.add("Vizsga tárgya, neve: " + examSubject + " - " + examName);
-        stringList.add("Vizsga dátuma: " + examDate);
-        stringList.add("Oktató neve: " + teacherName);
-        stringList.add("Vizsga eredmény azonosítója: " + examResultId);
-        stringList.add("Maximum elérhető pontok / Elért pontok: " + maxPoints + " / " + attainedPoints);
-        stringList.add("Elért jegy: " + attainedMark);
+        stringList.add("Vizsgázó neve: " + examResult.getStudentName());
+        stringList.add("Vizsgázó neptun kódja: " + examResult.getStudentNeptun());
+        stringList.add("Vizsgázó email címe: " + examResult.getStudentEmail());
+        stringList.add("Vizsga tárgya, neve: " + examResult.getSubject() + " - " + examResult.getExamName());
+        stringList.add("Vizsga dátuma: " + DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).format(examResult.getTimeOfSubmission()));
+        if(teacher.getTeacherTitle().equals("")) {
+            stringList.add("Oktató neve: " + teacher.getTeacherLastName() + " " + teacher.getTeacherFirstName());
+        }
+        else {
+            stringList.add("Oktató neve: " + teacher.getTeacherTitle() + " " + teacher.getTeacherLastName() + " " + teacher.getTeacherFirstName());
+        }
+        stringList.add("Maximum elérhető pontok / Elért pontok: " + examResult.getSumOfMaxPoints() + "/" + examResult.getSumOfAttainedPoints());
+        stringList.add("Elért jegy: " + examResult.getAttainedGrade());
 
         PDDocument document = new PDDocument();
         PDPage page= new PDPage();

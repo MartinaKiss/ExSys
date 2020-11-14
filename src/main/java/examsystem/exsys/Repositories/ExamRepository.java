@@ -8,6 +8,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Repository
@@ -17,15 +18,15 @@ public class ExamRepository {
         private EntityManager entityManager;
 
         public List<Exam> findAll() {
-            return entityManager.createQuery("select n from " + Exam.class.getSimpleName() + " n").getResultList();
+            return entityManager.createNamedQuery(Exam.FIND_ALL).getResultList();
         }
 
         public void save(Exam exam) {
             entityManager.persist(exam);
         }
 
-        public void delete(int id) throws Exception {
-            entityManager.remove(findById(id));
+        public void delete(Exam exam) throws Exception {
+            entityManager.remove(findById(exam.getExamId()));
 
         }
 
@@ -39,14 +40,16 @@ public class ExamRepository {
 
         public Exam findByEnterExamCode(String enterExamCode) {
             Query query = entityManager.createNamedQuery(Exam.FIND_BY_ENTER_EXAM_CODE);
-            query.setParameter("enterExamCode",enterExamCode);
+            query.setParameter("enterExamCode", enterExamCode);
             return (Exam) query.getSingleResult();
+
 
         }
 
         public List<Exam> findAllByTeacherId(int id) {
             Query query = entityManager.createNamedQuery(Exam.FIND_BY_TEACHER_ID);
-            query.setParameter("teacherId",id);
+            query.setParameter("teacherId", id);
+            System.out.println(query.getParameters());
             return query.getResultList();
         }
 }

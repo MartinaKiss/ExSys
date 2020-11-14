@@ -2,6 +2,7 @@ package examsystem.exsys.Views;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
@@ -47,7 +48,7 @@ public class MainTemplateView extends AppLayout {
     public MainTemplateView() {
         HorizontalLayout imageContainer = new HorizontalLayout();
         Image logo = new Image("frontend/logoDarkMode.png", "ExSys Logo");
-        logo.setWidth("100%");
+        logo.setWidth("90%");
         imageContainer.add(logo);
         imageContainer.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         imageContainer.setHeight("150%");
@@ -60,7 +61,7 @@ public class MainTemplateView extends AppLayout {
         createButtonLayout();
         logout.addThemeVariants(ButtonVariant.LUMO_LARGE);
         logout.addClickListener(e -> {
-            Notification.show("Not implemented");
+            UI.getCurrent().navigate(MainView.class);
         });
 
         menu = createMenuTabs();

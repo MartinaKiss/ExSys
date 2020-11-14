@@ -24,7 +24,7 @@ public class ResultRepository {
         entityManager.persist(result);
     }
 
-    public void delete(String id) throws Exception {
+    public void delete(int id) throws Exception {
         entityManager.remove(findById(id));
 
     }
@@ -33,7 +33,7 @@ public class ResultRepository {
         entityManager.merge(result);
     }
 
-    public ExamResult findById(String id) throws Exception {
+    public ExamResult findById(int id) throws Exception {
         return entityManager.find(ExamResult.class, id);
     }
 

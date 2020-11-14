@@ -52,7 +52,6 @@ public class ContactView extends Div {
         wrapper.add(formContainer, buttonContainer);
         wrapper.setWidth("90%");
         wrapper.setPadding(false);
-//        container.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
         add(container);
     }
 

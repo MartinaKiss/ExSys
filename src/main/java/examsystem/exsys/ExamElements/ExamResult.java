@@ -2,6 +2,7 @@ package examsystem.exsys.ExamElements;
 
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @NamedQueries({
         @NamedQuery(name = ExamResult.FIND_ALL, query = "select n from ExamResult n"),
@@ -20,13 +21,14 @@ public class ExamResult {
     private int examResultId;
     private String examName;
     private String subject;
-    private String teacherId;
+    private int teacherId;
     private String studentName;
     private String studentNeptun;
     private String studentEmail;
-    private int sumOfMaxPoints;
-    private int sumOfAttainedPoints;
+    private double sumOfMaxPoints;
+    private double sumOfAttainedPoints;
     private int attainedGrade;
+    private LocalDateTime timeOfSubmission;
 
     @ManyToOne
     @JoinColumn(name="exam_id")
@@ -59,11 +61,11 @@ public class ExamResult {
         this.subject = subject;
     }
 
-    public String getTeacherId() {
+    public int getTeacherId() {
         return teacherId;
     }
 
-    public void setTeacherId(String teacherId) {
+    public void setTeacherId(int teacherId) {
         this.teacherId = teacherId;
     }
 
@@ -91,19 +93,19 @@ public class ExamResult {
         this.studentEmail = studentEmail;
     }
 
-    public int getSumOfMaxPoints() {
+    public double getSumOfMaxPoints() {
         return sumOfMaxPoints;
     }
 
-    public void setSumOfMaxPoints(int sumOfMaxPoints) {
+    public void setSumOfMaxPoints(double sumOfMaxPoints) {
         this.sumOfMaxPoints = sumOfMaxPoints;
     }
 
-    public int getSumOfAttainedPoints() {
+    public double getSumOfAttainedPoints() {
         return sumOfAttainedPoints;
     }
 
-    public void setSumOfAttainedPoints(int sumOfAttainedPoints) {
+    public void setSumOfAttainedPoints(double sumOfAttainedPoints) {
         this.sumOfAttainedPoints = sumOfAttainedPoints;
     }
 
@@ -113,5 +115,21 @@ public class ExamResult {
 
     public void setAttainedGrade(int attainedGrade) {
         this.attainedGrade = attainedGrade;
+    }
+
+    public LocalDateTime getTimeOfSubmission() {
+        return timeOfSubmission;
+    }
+
+    public void setTimeOfSubmission(LocalDateTime timeOfSubmission) {
+        this.timeOfSubmission = timeOfSubmission;
+    }
+
+    public Exam getExam() {
+        return exam;
+    }
+
+    public void setExam(Exam exam) {
+        this.exam = exam;
     }
 }

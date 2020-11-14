@@ -32,15 +32,14 @@ public class Exam {
     @JoinColumn(name="teacher_id")
     private Teacher teacher;
 
-    private int gradeFivePointLimit;
-    private int gradeFourPointLimit;
-    private int gradeThreePointLimit;
-    private int gradeTwoPointLimit;
-
-    private int numberOfQuestions;
-    private int maxSumOfPoints;
+    private double gradeFivePointLimit;
+    private double gradeFourPointLimit;
+    private double gradeThreePointLimit;
+    private double gradeTwoPointLimit;
+    private double maxSumOfPoints;
     private boolean isWrongAnswerMinusPoint = false;
-    private int valueOfMinusPoint = 0;
+    private double valueOfMinusPoint = 0;
+    private boolean isExamActive = false;
 
     public Exam() {
     }
@@ -73,43 +72,43 @@ public class Exam {
         this.teacher = teacher;
     }
 
-    public int getMaxSumOfPoints() {
+    public double getMaxSumOfPoints() {
         return maxSumOfPoints;
     }
 
-    public void setMaxSumOfPoints(int maxSumOfPoints) {
+    public void setMaxSumOfPoints(double maxSumOfPoints) {
         this.maxSumOfPoints = maxSumOfPoints;
     }
 
-    public int getGradeFivePointLimit() {
+    public double getGradeFivePointLimit() {
         return gradeFivePointLimit;
     }
 
-    public void setGradeFivePointLimit(int gradeFivePointLimit) {
+    public void setGradeFivePointLimit(double gradeFivePointLimit) {
         this.gradeFivePointLimit = gradeFivePointLimit;
     }
 
-    public int getGradeFourPointLimit() {
+    public double getGradeFourPointLimit() {
         return gradeFourPointLimit;
     }
 
-    public void setGradeFourPointLimit(int gradeFourPointLimit) {
+    public void setGradeFourPointLimit(double gradeFourPointLimit) {
         this.gradeFourPointLimit = gradeFourPointLimit;
     }
 
-    public int getGradeThreePointLimit() {
+    public double getGradeThreePointLimit() {
         return gradeThreePointLimit;
     }
 
-    public void setGradeThreePointLimit(int gradeThreePointLimit) {
+    public void setGradeThreePointLimit(double gradeThreePointLimit) {
         this.gradeThreePointLimit = gradeThreePointLimit;
     }
 
-    public int getGradeTwoPointLimit() {
+    public double getGradeTwoPointLimit() {
         return gradeTwoPointLimit;
     }
 
-    public void setGradeTwoPointLimit(int gradeTwoPointLimit) {
+    public void setGradeTwoPointLimit(double gradeTwoPointLimit) {
         this.gradeTwoPointLimit = gradeTwoPointLimit;
     }
 
@@ -121,11 +120,11 @@ public class Exam {
         isWrongAnswerMinusPoint = wrongAnswerMinusPoint;
     }
 
-    public int getValueOfMinusPoint() {
+    public double getValueOfMinusPoint() {
         return valueOfMinusPoint;
     }
 
-    public void setValueOfMinusPoint(int valueOfMinusPoint) {
+    public void setValueOfMinusPoint(double valueOfMinusPoint) {
         this.valueOfMinusPoint = valueOfMinusPoint;
     }
 
@@ -149,20 +148,26 @@ public class Exam {
         this.enterExamCode = enterExamCode;
     }
 
-    public int getNumberOfQuestions() {
-        return numberOfQuestions;
-    }
-
-    public void setNumberOfQuestions(int numberOfQuestions) {
-        this.numberOfQuestions = numberOfQuestions;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String isExamActive() {
+//        return isExamActive;
+        if (isExamActive){
+            return "Aktív";
+        }
+        else{
+            return "Inaktív";
+        }
+    }
+
+    public void setExamActive(boolean examActive) {
+        isExamActive = examActive;
     }
 }
 

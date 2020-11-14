@@ -18,12 +18,6 @@ import com.vaadin.flow.router.Route;
 import examsystem.exsys.Repositories.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
-//TODO 1. Írj HZnak, hogy utána hozzá lehet-e nyúlni a szoftverhez, miután leadtad a szakdogát neptunban, illetve,
-//     hogy meddig és hogyan kell leadni személyesen
-//     2. Írd meg a login sessiont és ha még a napba belefér, akkor a jelszó titkosítást is. Login a mystarterprojectben
-//     nézd meg, hogy ott hogy csinálják a bejelentkezést, letöltöttem újra, ott van az asztalon meg a könyvjelzők közé
-//     is mentettem el pár hasznos cumót a login session nevű könyvjelző mappába.
-
 @Route(value = "login", layout = MainTemplateView.class)
 @PageTitle("Bejelentkezés")
 @CssImport("styles/views/vizsgalétrehozása/vizsgalétrehozása-view.css")
