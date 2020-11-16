@@ -7,11 +7,8 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
@@ -26,20 +23,18 @@ public class SecondaryTemplateView extends AppLayout {
     public SecondaryTemplateView() {
 
         HorizontalLayout imageContainer = new HorizontalLayout();
-        VerticalLayout container = new VerticalLayout();
         Image logo = new Image("frontend/logoDarkMode.png", "ExSys Logo");
         logo.setWidth("90%");
+        logo.addClickListener(e -> UI.getCurrent().navigate(MainView.class));
         imageContainer.add(logo);
         imageContainer.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         imageContainer.setHeight("150%");
         DrawerToggle drawerToggleButton = new DrawerToggle();
-        Icon drawerIcon = new Icon(VaadinIcon.MENU);
-        drawerIcon.setSize("200%");
-        drawerToggleButton.setIcon(drawerIcon);
         addToNavbar(true, drawerToggleButton, imageContainer);
         createButtonLayout();
         logout.addThemeVariants(ButtonVariant.LUMO_LARGE);
         logout.addClickListener(e -> {
+            UI.getCurrent().getSession().close();
             UI.getCurrent().navigate(MainView.class);
         });
     }

@@ -60,10 +60,8 @@ public class ExamForm extends VerticalLayout {
                 }
                 setVisible(false);
                 reloader.reload();
-                Notification.show("Success!");
             }catch (Exception e) {
-                Notification.show(":(");
-                e.printStackTrace();
+                Notification.show("Caught exception: " + e);
             }
             Notification.show("Successfully edited!");
             setVisible(false);

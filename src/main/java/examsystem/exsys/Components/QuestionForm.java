@@ -89,7 +89,6 @@ public class QuestionForm extends VerticalLayout {
                 }
                 setVisible(false);
                 reloader.reload();
-                Notification.show("Success!");
             } catch (Exception e) {
                 Notification.show("Caught exception: " + e);
                 e.printStackTrace();

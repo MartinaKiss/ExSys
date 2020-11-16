@@ -116,7 +116,7 @@ public class AddQuestionsView extends Div implements HasUrlParameter<String>, Re
     }
 
     @Override
-    public void reload() throws Exception {
+    public void reload() {
         grid.setItems(questionRepository.findAllByExamId(exam.getExamId()));
     }
 

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -34,5 +35,11 @@ public class TeacherRepository {
 
     public Teacher findById(int id) {
         return entityManager.find(Teacher.class, id);
+    }
+
+    public Teacher findByEmail(String emailAddress){
+        Query query = entityManager.createNamedQuery(Teacher.FIND_BY_EMAIL);
+        query.setParameter("emailAddress", emailAddress);
+        return (Teacher) query.getSingleResult();
     }
 }

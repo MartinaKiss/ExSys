@@ -9,11 +9,9 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Paragraph;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
 import examsystem.exsys.Entities.Teacher;
@@ -23,15 +21,11 @@ import examsystem.exsys.Repositories.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
-import java.util.Optional;
 
 @Route(value = "createexam", layout = MainTemplateView.class)
 @PageTitle("Vizsga létrehozása")
 @CssImport("styles/views/vizsgalétrehozása/vizsgalétrehozása-view.css")
 public class CreateExamView extends Div implements HasUrlParameter<String> {
-
-    private static final long serialVersionUID = 1L;
-    public static final String NAME = "Secure";
 
     @Autowired
     TeacherRepository teacherRepository;
@@ -43,7 +37,6 @@ public class CreateExamView extends Div implements HasUrlParameter<String> {
     private Exam newExam;
     private TextField examName = new TextField();
     private TextField examSubject = new TextField();
-
     private Button nextButton = new Button("Tovább");
 
     @Override
@@ -62,9 +55,8 @@ public class CreateExamView extends Div implements HasUrlParameter<String> {
 
     @PostConstruct
     public void init() {
-        //todo delete this when session is done
-        teacher = teacherRepository.findById(2);
-        //
+        int teacherId = (int) UI.getCurrent().getSession().getAttribute("teacher");
+        teacher = teacherRepository.findById(teacherId);
 
         setId("vizsgalétrehozása-view");
         VerticalLayout wrapper = createWrapper();

@@ -1,14 +1,19 @@
 package examsystem.exsys.Entities;
 
+import examsystem.exsys.ExamElements.Exam;
+
 import javax.persistence.*;
 
-@NamedQuery(name = Teacher.FIND_ALL, query = "select n from Teacher n")
-
+@NamedQueries({
+        @NamedQuery(name = Teacher.FIND_ALL, query = "select n from Teacher n"),
+        @NamedQuery(name = Teacher.FIND_BY_EMAIL, query = "select n from Teacher n where n.emailAddress=:emailAddress")
+})
 
 @Table
 @Entity
 public class Teacher {
     public static final String FIND_ALL = "Teacher.findAll";
+    public static final String FIND_BY_EMAIL = "Teacher.findByEmail";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

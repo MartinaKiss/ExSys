@@ -20,7 +20,6 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import examsystem.exsys.Entities.Teacher;
 import examsystem.exsys.Repositories.TeacherRepository;
-import examsystem.exsys.Views.MainTemplateView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;

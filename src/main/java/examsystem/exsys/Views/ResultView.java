@@ -2,15 +2,16 @@ package examsystem.exsys.Views;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.charts.model.style.Color;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H4;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.StreamResource;
-import com.vaadin.flow.theme.lumo.Lumo;
 import examsystem.exsys.Entities.Teacher;
 import examsystem.exsys.ExamElements.ExamResult;
 import examsystem.exsys.Repositories.ResultRepository;
@@ -18,24 +19,19 @@ import examsystem.exsys.Repositories.TeacherRepository;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.common.PDStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.olli.FileDownloadWrapper;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import java.io.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 @Route(value = "result", layout = SecondaryTemplateView.class)

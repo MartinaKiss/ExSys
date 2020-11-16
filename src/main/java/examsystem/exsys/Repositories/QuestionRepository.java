@@ -28,16 +28,16 @@ public class QuestionRepository {
 
     }
 
-    public void update(Question question) throws Exception {
+    public void update(Question question) {
         entityManager.merge(question);
     }
 
 
-    public Question findById(int id) throws Exception {
+    public Question findById(int id) {
         return entityManager.find(Question.class, id);
     }
 
-    public List<Question> findAllByExamId(int id) throws Exception {
+    public List<Question> findAllByExamId(int id) {
         Query query = entityManager.createNamedQuery(Question.FIND_BY_EXAM_ID);
         query.setParameter("examId",id);
         return query.getResultList();

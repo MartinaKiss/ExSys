@@ -8,7 +8,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Transactional
 @Repository
@@ -25,7 +24,7 @@ public class ExamRepository {
             entityManager.persist(exam);
         }
 
-        public void delete(Exam exam) throws Exception {
+        public void delete(Exam exam) {
             entityManager.remove(findById(exam.getExamId()));
 
         }

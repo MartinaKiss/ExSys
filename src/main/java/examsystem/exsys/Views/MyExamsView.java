@@ -9,13 +9,12 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.AfterNavigationEvent;
-import com.vaadin.flow.router.AfterNavigationObserver;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.StreamResource;
+import examsystem.exsys.Entities.Teacher;
 import examsystem.exsys.ExamElements.Exam;
 import examsystem.exsys.ExamElements.ExamResult;
 import examsystem.exsys.Repositories.ExamRepository;
@@ -57,10 +56,7 @@ public class MyExamsView extends Div implements AfterNavigationObserver, Reloade
 
     private List<String[]> resultList;
 
-    private Button editButton = new Button("Módosítás");
-    private Button downloadButton = new Button("Letöltés");
-    private Button deleteButton = new Button("Törlés");
-    private Button createExamButton;
+    private Teacher teacher;
 
     @PostConstruct
     private void init(){
@@ -88,38 +84,28 @@ public class MyExamsView extends Div implements AfterNavigationObserver, Reloade
                 " eredményeit csv formátumban. A 6 jegyű beléptető kódot kell megadnia a tanulóknak, hogy be tudjanak " +
                 "lépni a vizsgára.");
 
-        createExamButton = new Button("Vizsga Létrehozása", VaadinIcon.PLUS.create());
+        Button createExamButton = new Button("Vizsga Létrehozása", VaadinIcon.PLUS.create());
         createExamButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        createExamButton.addClickListener(e -> {
-            UI.getCurrent().navigate(CreateExamView.class);
-        });
+        createExamButton.addClickListener(e -> UI.getCurrent().navigate(CreateExamView.class));
         wrapper.add(h1, paragraph, createExamButton);
         container.add(wrapper);
         container.add(exams);
         add(container);
     }
 
-    private void createTitle(VerticalLayout wrapper, String text) {
-        H1 h1 = new H1(text);
-        wrapper.add(h1);
-    }
-
-    private void createParagraph(VerticalLayout wrapper, String text){
-        Paragraph paragraph = new Paragraph(text);
-        wrapper.add(paragraph);
-    }
-
     @Override
-    public void reload() throws Exception {
-        exams.setItems(examRepository.findAllByTeacherId(2));
+    public void reload() {
+        exams.setItems(examRepository.findAllByTeacherId(teacher.getTeacherId()));
     }
 
     @Override
     public void afterNavigation(AfterNavigationEvent event) {
         try {
-            exams.setItems(examRepository.findAllByTeacherId(2));
-        } catch (Exception e) {
-            e.printStackTrace();
+            int teacherId = (int) UI.getCurrent().getSession().getAttribute("teacher");
+            teacher = teacherRepository.findById(teacherId);
+            exams.setItems(examRepository.findAllByTeacherId(teacher.getTeacherId()));
+        } catch (NullPointerException nullPointer) {
+            Notification.show("Ön nincs bejelentkezve");
         }
     }
 
@@ -134,15 +120,13 @@ public class MyExamsView extends Div implements AfterNavigationObserver, Reloade
                     }
                     exam.setEnterExamCode(enterCode);
                     exam.setExamActive(true);
-                    examRepository.update(exam);
-                    reload();
                 }
                 else {
                     exam.setEnterExamCode(null);
                     exam.setExamActive(false);
-                    examRepository.update(exam);
-                    reload();
                 }
+                examRepository.update(exam);
+                reload();
 
             } catch (Exception exception) {
                 exception.printStackTrace();
@@ -152,32 +136,30 @@ public class MyExamsView extends Div implements AfterNavigationObserver, Reloade
     }
 
     private Button buildEditButton(Exam exam) {
-        Button button = new Button("Szerkesztés",VaadinIcon.PENCIL.create());
-        button.addClickListener(e -> {
-            UI.getCurrent().navigate("createexam/" + exam.getExamId());
-        });
-        return button;
+        Button editButton = new Button("Szerkesztés", VaadinIcon.PENCIL.create());
+        editButton.addClickListener(e -> UI.getCurrent().navigate("createexam/" + exam.getExamId()));
+        return editButton;
     }
 
     private Button buildDeleteButton(Exam exam) {
-        Button button = new Button("Törlés",VaadinIcon.TRASH.create());
-        button.addClickListener(e -> {
+        Button deleteButton = new Button("Törlés",VaadinIcon.TRASH.create());
+        deleteButton.addClickListener(e -> {
             try {
                 deleteExam(exam);
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
         });
-        return button;
+        return deleteButton;
     }
 
-    private void deleteExam(Exam exam) throws Exception {
+    private void deleteExam(Exam exam) {
         examRepository.delete(exam);
-        exams.setItems(examRepository.findAllByTeacherId(2));
+        exams.setItems(examRepository.findAllByTeacherId(teacher.getTeacherId()));
     }
 
     private FileDownloadWrapper buildExportButton(Exam exam) {
-        Button button = new Button("Eredmények letöltése",VaadinIcon.ARROW_DOWN.create());
+        Button exportButton = new Button("Eredmények letöltése",VaadinIcon.ARROW_DOWN.create());
         try {
             List<ExamResult> results = new ArrayList<>(resultRepository.findAllByExamId(exam.getExamId()));
 
@@ -203,7 +185,7 @@ public class MyExamsView extends Div implements AfterNavigationObserver, Reloade
                     return null;
                 })
         );
-        buttonWrapper.wrapComponent(button);
+        buttonWrapper.wrapComponent(exportButton);
 
         return buttonWrapper;
     }

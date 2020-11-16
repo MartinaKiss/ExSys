@@ -9,10 +9,8 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -36,12 +34,7 @@ import java.util.Optional;
 @Theme(value = Lumo.class, variant = Lumo.DARK)
 public class MainTemplateView extends AppLayout {
 
-    private static final long serialVersionUID = 1L;
-    private Label secure;
-    private Label currentUser;
-    private Button otherSecure;
     private Button logout = new Button("Kijelentkezés");
-    public static final String NAME = "Secure";
 
     private final Tabs menu;
 
@@ -49,6 +42,7 @@ public class MainTemplateView extends AppLayout {
         HorizontalLayout imageContainer = new HorizontalLayout();
         Image logo = new Image("frontend/logoDarkMode.png", "ExSys Logo");
         logo.setWidth("90%");
+        logo.addClickListener(e -> UI.getCurrent().navigate(MainView.class));
         imageContainer.add(logo);
         imageContainer.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         imageContainer.setHeight("150%");
@@ -61,9 +55,9 @@ public class MainTemplateView extends AppLayout {
         createButtonLayout();
         logout.addThemeVariants(ButtonVariant.LUMO_LARGE);
         logout.addClickListener(e -> {
+            UI.getCurrent().getSession().close();
             UI.getCurrent().navigate(MainView.class);
         });
-
         menu = createMenuTabs();
         addToDrawer(menu);
     }
@@ -82,7 +76,14 @@ public class MainTemplateView extends AppLayout {
         tabs.add(createTab("Főoldal", MainView.class));
         tabs.add(createTab("Bejelentkezés", LoginView.class));
         tabs.add(createTab("Regisztráció", RegisterView.class));
-        tabs.add(createTab("Vizsgáim", MyExamsView.class));
+        try{
+            UI.getCurrent().getSession().getAttribute("teacher");
+            tabs.add(createTab("Vizsgáim", MyExamsView.class));
+        }
+        catch (NullPointerException ignored){
+
+        }
+
         tabs.add(createTab("Kapcsolat", ContactView.class));
         return tabs.toArray(new Tab[0]);
     }

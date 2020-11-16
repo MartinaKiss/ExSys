@@ -27,9 +27,7 @@ public class MainView extends Div {
     @Autowired
     private ExamRepository examRepository;
 
-
     private TextField examCode = new TextField();
-
     private Button goToExam = new Button("Tovább a vizsgára!");
 
     public MainView() {

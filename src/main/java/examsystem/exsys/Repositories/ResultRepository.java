@@ -24,20 +24,20 @@ public class ResultRepository {
         entityManager.persist(result);
     }
 
-    public void delete(int id) throws Exception {
+    public void delete(int id) {
         entityManager.remove(findById(id));
 
     }
 
-    public void update(ExamResult result) throws Exception {
+    public void update(ExamResult result) {
         entityManager.merge(result);
     }
 
-    public ExamResult findById(int id) throws Exception {
+    public ExamResult findById(int id) {
         return entityManager.find(ExamResult.class, id);
     }
 
-    public List<ExamResult> findAllByExamId(int id) throws Exception {
+    public List<ExamResult> findAllByExamId(int id) {
         Query query = entityManager.createNamedQuery(ExamResult.FIND_BY_EXAM_ID);
         query.setParameter("examId",id);
         return query.getResultList();

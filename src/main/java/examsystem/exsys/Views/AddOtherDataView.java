@@ -34,9 +34,6 @@ import javax.annotation.PostConstruct;
 @CssImport("styles/views/evkérdésekhozzáadása/e-vkérdésekhozzáadása-view.css")
 public class AddOtherDataView extends Div implements HasUrlParameter<String> {
 
-    private static final long serialVersionUID = 1L;
-    public static final String NAME = "Secure";
-
     @Autowired
     ExamRepository examRepository;
 
