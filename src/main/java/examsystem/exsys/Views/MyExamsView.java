@@ -118,6 +118,9 @@ public class MyExamsView extends Div implements AfterNavigationObserver, Reloade
                     while (isExistByEnterExamCode(enterCode)){
                         enterCode = utils.generateEnterExamCode();
                     }
+                    for (ExamResult oldResult : resultRepository.findAllByExamId(exam.getExamId())) {
+                        resultRepository.delete(oldResult.getExamResultId());
+                    }
                     exam.setEnterExamCode(enterCode);
                     exam.setExamActive(true);
                 }

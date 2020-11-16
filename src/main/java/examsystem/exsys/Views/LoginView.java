@@ -18,6 +18,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import examsystem.exsys.Entities.Teacher;
 import examsystem.exsys.Repositories.TeacherRepository;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Route(value = "login", layout = MainTemplateView.class)
@@ -56,7 +57,7 @@ public class LoginView extends Div {
         loginButton.addClickListener(e -> {
             try {
                 teacher = teacherRepository.findByEmail(email.getValue());
-                if (teacher.getPassword().equals(password.getValue())){
+                if (BCrypt.checkpw(password.getValue(), teacher.getPassword())){
                     UI.getCurrent().getSession().setAttribute("teacher", teacher.getTeacherId());
                     UI.getCurrent().navigate(MyExamsView.class);
                 }

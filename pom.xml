@@ -147,7 +147,6 @@
             <artifactId>avalon-framework-impl</artifactId>
             <version>4.3.1</version>
         </dependency>
-
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>itextpdf</artifactId>
@@ -169,7 +168,11 @@
             <version>25.0-jre</version>
             <scope>compile</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.4</version>
+        </dependency>
     </dependencies>
 
 

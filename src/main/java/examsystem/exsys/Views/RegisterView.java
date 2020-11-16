@@ -20,6 +20,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import examsystem.exsys.Entities.Teacher;
 import examsystem.exsys.Repositories.TeacherRepository;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -86,7 +87,7 @@ public class RegisterView extends Div {
                             teacher.setTeacherLastName(lastName.getValue());
                             teacher.setTeacherTitle(teacherTitle.getValue());
                             teacher.setEmailAddress(email.getValue());
-                            teacher.setPassword(password.getValue());
+                            teacher.setPassword(BCrypt.hashpw(password.getValue(), BCrypt.gensalt()));
                             teacherRepository.save(teacher);
 
                             Notification.show("Sikeres regisztráció");
