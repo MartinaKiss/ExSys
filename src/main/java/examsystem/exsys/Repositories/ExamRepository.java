@@ -1,6 +1,6 @@
 package examsystem.exsys.Repositories;
 
-import examsystem.exsys.ExamElements.Exam;
+import examsystem.exsys.Entities.Exam;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -48,7 +48,6 @@ public class ExamRepository {
         public List<Exam> findAllByTeacherId(int id) {
             Query query = entityManager.createNamedQuery(Exam.FIND_BY_TEACHER_ID);
             query.setParameter("teacherId", id);
-            System.out.println(query.getParameters());
             return query.getResultList();
         }
 }

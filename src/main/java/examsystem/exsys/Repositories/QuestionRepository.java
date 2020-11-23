@@ -1,6 +1,6 @@
 package examsystem.exsys.Repositories;
 
-import examsystem.exsys.ExamElements.Question;
+import examsystem.exsys.Entities.Question;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

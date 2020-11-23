@@ -1,4 +1,4 @@
-package examsystem.exsys.ExamElements;
+package examsystem.exsys.Entities;
 
 import javax.persistence.*;
 

@@ -7,7 +7,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
-import examsystem.exsys.ExamElements.Exam;
+import examsystem.exsys.Entities.Exam;
 import examsystem.exsys.Repositories.ExamRepository;
 import examsystem.exsys.Views.ViewComponents.Reloader;
 import org.springframework.beans.factory.annotation.Autowired;

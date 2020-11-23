@@ -12,8 +12,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
 import examsystem.exsys.Components.QuestionForm;
-import examsystem.exsys.ExamElements.Exam;
-import examsystem.exsys.ExamElements.Question;
+import examsystem.exsys.Entities.Exam;
+import examsystem.exsys.Entities.Question;
 import examsystem.exsys.Repositories.ExamRepository;
 import examsystem.exsys.Repositories.QuestionRepository;
 import examsystem.exsys.Views.ViewComponents.Reloader;
@@ -88,7 +88,6 @@ public class AddQuestionsView extends Div implements HasUrlParameter<String>, Re
                 for (Question question : questionList) {
                     maxSumOfPoints = maxSumOfPoints + question.getAttainablePoints();
                 }
-                System.out.println("Max sum of points: " + maxSumOfPoints);
                 exam.setMaxSumOfPoints(maxSumOfPoints);
             } catch (Exception exception) {
                 exception.printStackTrace();

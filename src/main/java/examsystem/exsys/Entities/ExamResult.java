@@ -1,5 +1,8 @@
-package examsystem.exsys.ExamElements;
+package examsystem.exsys.Entities;
 
+import elemental.json.JsonArray;
+import elemental.json.JsonObject;
+import org.json.JSONObject;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -29,6 +32,7 @@ public class ExamResult {
     private double sumOfAttainedPoints;
     private int attainedGrade;
     private LocalDateTime timeOfSubmission;
+    private String answersList;
 
     @ManyToOne
     @JoinColumn(name="exam_id")
@@ -39,10 +43,6 @@ public class ExamResult {
 
     public int getExamResultId() {
         return examResultId;
-    }
-
-    public void setExamResultId(int examResultId) {
-        this.examResultId = examResultId;
     }
 
     public String getExamName() {
@@ -131,5 +131,13 @@ public class ExamResult {
 
     public void setExam(Exam exam) {
         this.exam = exam;
+    }
+
+    public String getAnswersList() {
+        return answersList;
+    }
+
+    public void setAnswersList(String answersList) {
+        this.answersList = answersList;
     }
 }

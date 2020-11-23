@@ -15,7 +15,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
 import examsystem.exsys.Entities.Teacher;
-import examsystem.exsys.ExamElements.Exam;
+import examsystem.exsys.Entities.Exam;
 import examsystem.exsys.Repositories.ExamRepository;
 import examsystem.exsys.Repositories.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;

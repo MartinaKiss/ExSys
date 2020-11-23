@@ -13,10 +13,11 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
-import examsystem.exsys.ExamElements.Exam;
-import examsystem.exsys.ExamElements.Question;
+import examsystem.exsys.Entities.Exam;
+import examsystem.exsys.Entities.Question;
 import examsystem.exsys.Repositories.QuestionRepository;
 import examsystem.exsys.Views.ViewComponents.Reloader;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -77,8 +78,8 @@ public class QuestionForm extends VerticalLayout {
         saveButton.setText("Save");
         saveButton.setIcon(VaadinIcon.PENCIL.create());
         saveButton.addClickListener(buttonClickEvent ->
-
         {
+            question.setSolution(BCrypt.hashpw(solution.getValue(), BCrypt.gensalt()));
             try {
                 if (question.getQuestionId() == 0) {
                     questionRepository.save(question);

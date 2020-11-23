@@ -11,7 +11,6 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -22,9 +21,8 @@ import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import examsystem.exsys.ExamElements.Exam;
+import examsystem.exsys.Entities.Exam;
 import examsystem.exsys.Repositories.ExamRepository;
-import org.atmosphere.interceptor.AtmosphereResourceStateRecovery;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -93,7 +91,6 @@ public class AddOtherDataView extends Div implements HasUrlParameter<String> {
             exam.setGradeTwoPointLimit(gradeTwoPointLimit.getValue());
             exam.setDescription(examDescription.getValue());
             examRepository.update(exam);
-            System.out.println(exam.getDescription()+exam.getGradeFourPointLimit());
             UI.getCurrent().navigate(MyExamsView.class);
         });
         binder.bindInstanceFields(this);

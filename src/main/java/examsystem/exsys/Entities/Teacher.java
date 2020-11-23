@@ -1,7 +1,5 @@
 package examsystem.exsys.Entities;
 
-import examsystem.exsys.ExamElements.Exam;
-
 import javax.persistence.*;
 
 @NamedQueries({
