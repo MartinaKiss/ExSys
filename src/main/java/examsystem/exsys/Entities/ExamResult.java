@@ -1,9 +1,5 @@
 package examsystem.exsys.Entities;
 
-import elemental.json.JsonArray;
-import elemental.json.JsonObject;
-import org.json.JSONObject;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 

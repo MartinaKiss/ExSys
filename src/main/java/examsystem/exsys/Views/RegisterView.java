@@ -78,22 +78,28 @@ public class RegisterView extends Div {
         registerButton.addClickListener(buttonClickEvent -> {
             teacher = new Teacher();
             teacher.setNeptunCode(neptunCode.getValue());
+            teacher.setEmailAddress(email.getValue());
             try {
                 if(Long.getLong(String.valueOf(teacher.getTeacherId())) == null){
                     if(teacherRepository.findAll().isEmpty() || teacherRepository.findAll().stream().noneMatch(
                             lambdaTeacher -> lambdaTeacher.getNeptunCode().equals(teacher.getNeptunCode()))) {
-                        if (password.getValue().equals(passwordAgain.getValue())) {
-                            teacher.setTeacherFirstName(firstName.getValue());
-                            teacher.setTeacherLastName(lastName.getValue());
-                            teacher.setTeacherTitle(teacherTitle.getValue());
-                            teacher.setEmailAddress(email.getValue());
-                            teacher.setPassword(BCrypt.hashpw(password.getValue(), BCrypt.gensalt()));
-                            teacherRepository.save(teacher);
+                        if (teacherRepository.findAll().stream().noneMatch(lambdaTeacher -> lambdaTeacher.getEmailAddress().equals(teacher.getEmailAddress()))) {
+                            if (password.getValue().equals(passwordAgain.getValue())) {
+                                teacher.setTeacherFirstName(firstName.getValue());
+                                teacher.setTeacherLastName(lastName.getValue());
+                                teacher.setTeacherTitle(teacherTitle.getValue());
+                                teacher.setEmailAddress(email.getValue());
+                                teacher.setPassword(BCrypt.hashpw(password.getValue(), BCrypt.gensalt()));
+                                teacherRepository.save(teacher);
 
-                            Notification.show("Sikeres regisztráció");
+                                Notification.show("Sikeres regisztráció");
 
-                        } else {
-                            Notification.show("A jelszavak nem egyeznek");
+                            } else {
+                                Notification.show("A jelszavak nem egyeznek");
+                            }
+                        }
+                        else {
+                            Notification.show("Ezzel az e-mail címmel már regisztrált tanár.");
                         }
                     }
                     else{

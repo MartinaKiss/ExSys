@@ -56,7 +56,7 @@ public class QuestionForm extends VerticalLayout {
 
 
         Button deleteButton = new Button();
-        deleteButton.setText("Delete");
+        deleteButton.setText("Törlés");
         deleteButton.setIcon(VaadinIcon.TRASH.create());
         deleteButton.addClickListener(buttonClickEvent ->
         {
@@ -70,12 +70,12 @@ public class QuestionForm extends VerticalLayout {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Notification.show("Successfully removed!");
+            Notification.show("Sikeres törlés");
             setVisible(false);
         });
 
         Button saveButton = new Button();
-        saveButton.setText("Save");
+        saveButton.setText("Mentés");
         saveButton.setIcon(VaadinIcon.PENCIL.create());
         saveButton.addClickListener(buttonClickEvent ->
         {
@@ -83,18 +83,20 @@ public class QuestionForm extends VerticalLayout {
             try {
                 if (question.getQuestionId() == 0) {
                     questionRepository.save(question);
+                    Notification.show("Sikeres mentés");
 
                 } else {
                     questionRepository.update(question);
-
+                    Notification.show("Sikeres frissítés");
                 }
+
                 setVisible(false);
                 reloader.reload();
             } catch (Exception e) {
                 Notification.show("Caught exception: " + e);
                 e.printStackTrace();
             }
-            Notification.show("Successfully edited!");
+
             setVisible(false);
         });
         VerticalLayout container = new VerticalLayout();

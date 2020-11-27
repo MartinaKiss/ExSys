@@ -6,6 +6,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -58,6 +59,7 @@ public class AddQuestionsView extends Div implements HasUrlParameter<String>, Re
         VerticalLayout buttonWrapper1 = new VerticalLayout();
         VerticalLayout buttonWrapper2 = new VerticalLayout();
 
+        H1 title = new H1("Kérdések hozzáadása/módosítása");
         grid = new Grid<>(Question.class);
         setHeightFull();
         grid.removeAllColumns();
@@ -67,7 +69,6 @@ public class AddQuestionsView extends Div implements HasUrlParameter<String>, Re
         grid.addColumn(Question::getAnswer2).setHeader("2. válasz").setAutoWidth(true);
         grid.addColumn(Question::getAnswer3).setHeader("3. válasz").setAutoWidth(true);
         grid.addColumn(Question::getAnswer4).setHeader("4. válasz").setAutoWidth(true);
-        grid.addColumn(Question::getSolution).setHeader("Megoldás").setAutoWidth(true);
 
 
         grid.asSingleSelect().addValueChangeListener(e -> {
@@ -105,7 +106,10 @@ public class AddQuestionsView extends Div implements HasUrlParameter<String>, Re
         buttonContainer.setAlignItems(FlexComponent.Alignment.STRETCH);
         buttonContainer.setWidth("100%");
         form.setReloader(this);
-        container.add(grid);
+        VerticalLayout titleContainer = new VerticalLayout();
+        titleContainer.add(title);
+        titleContainer.setHorizontalComponentAlignment(FlexComponent.Alignment.START);
+        container.add(titleContainer, grid);
         container.add(buttonContainer);
         container.setAlignItems(FlexComponent.Alignment.CENTER);
         container.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);

@@ -28,7 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.PostConstruct;
 
 @Route(value = "addotherdataview", layout = SecondaryTemplateView.class)
-@PageTitle("EV kérdések hozzáadása")
+@PageTitle("Egyéb adatok megadása")
 @CssImport("styles/views/evkérdésekhozzáadása/e-vkérdésekhozzáadása-view.css")
 public class AddOtherDataView extends Div implements HasUrlParameter<String> {
 
@@ -91,8 +91,10 @@ public class AddOtherDataView extends Div implements HasUrlParameter<String> {
             exam.setGradeTwoPointLimit(gradeTwoPointLimit.getValue());
             exam.setDescription(examDescription.getValue());
             examRepository.update(exam);
+            UI.getCurrent().getSession().setAttribute("teacher", exam.getTeacher().getTeacherId());
             UI.getCurrent().navigate(MyExamsView.class);
         });
+
         binder.bindInstanceFields(this);
         add(container);
     }

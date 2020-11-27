@@ -31,7 +31,7 @@ import java.util.Optional;
  */
 @Route(value="template")
 @JsModule("./styles/shared-styles.js")
-@Theme(value = Lumo.class, variant = Lumo.DARK)
+@Theme(value = Lumo.class, variant = Lumo.LIGHT)
 public class MainTemplateView extends AppLayout {
 
     private Button logout = new Button("Kijelentkezés");
@@ -40,7 +40,7 @@ public class MainTemplateView extends AppLayout {
 
     public MainTemplateView() {
         HorizontalLayout imageContainer = new HorizontalLayout();
-        Image logo = new Image("frontend/logoDarkMode.png", "ExSys Logo");
+        Image logo = new Image("frontend/logoLightMode.png", "ExSys Logo");
         logo.setWidth("90%");
         logo.addClickListener(e -> UI.getCurrent().navigate(MainView.class));
         imageContainer.add(logo);

@@ -9,37 +9,38 @@ $_documentContainer.innerHTML = `
 <custom-style>
   <style>
     html {
-      --lumo-primary-color: hsla(206, 95%, 30%, 1);
-      --lumo-primary-text-color: hsla(206, 95%, 30%, 1);
+      --lumo-primary-color: hsl(156,100%,18%);
+      --lumo-primary-text-color: hsl(156,100%,18%);
     }
 
     [theme~="dark"] {
-      --lumo-shade-5pct: rgba(33, 33, 33, 0.05);
-      --lumo-shade-10pct: rgba(33, 33, 33, 0.1);
-      --lumo-shade-20pct: rgba(33, 33, 33, 0.2);
-      --lumo-shade-30pct: rgba(33, 33, 33, 0.3);
-      --lumo-shade-40pct: rgba(33, 33, 33, 0.4);
-      --lumo-shade-50pct: rgba(33, 33, 33, 0.5);
-      --lumo-shade-60pct: rgba(33, 33, 33, 0.6);
-      --lumo-shade-70pct: rgba(33, 33, 33, 0.7);
-      --lumo-shade-80pct: rgba(33, 33, 33, 0.8);
-      --lumo-shade-90pct: rgba(33, 33, 33, 0.9);
-      --lumo-primary-color-50pct: rgba(235, 89, 5, 0.5);
+      --lumo-shade-5pct: rgba(0, 101, 2, 0.05);
+      --lumo-shade-10pct: rgba(0, 101, 2, 0.1);
+      --lumo-shade-20pct: rgba(0, 101, 2, 0.2);
+      --lumo-shade-30pct: rgba(0, 101, 2, 0.3);
+      --lumo-shade-40pct: rgba(0, 101, 2, 0.4);
+      --lumo-shade-50pct: rgba(0, 101, 2, 0.5);
+      --lumo-shade-60pct: rgba(0, 101, 2, 0.6);
+      --lumo-shade-70pct: rgba(0, 101, 2, 0.7);
+      --lumo-shade-80pct: rgba(0, 101, 2, 0.8);
+      --lumo-shade-90pct: rgba(0, 101, 2, 0.9);
+      --lumo-primary-color-50pct: rgba(235,89,5,0.5);
       --lumo-primary-color-10pct: rgba(235, 89, 5, 0.1);
       --lumo-error-color-50pct: rgba(231, 24, 24, 0.5);
       --lumo-error-color-10pct: rgba(231, 24, 24, 0.1);
-      --lumo-success-color-50pct: rgba(62, 229, 170, 0.5);
-      --lumo-success-color-10pct: rgba(62, 229, 170, 0.1);
-      --lumo-shade: hsl(0, 0%, 13%);
-      --lumo-primary-color: hsl(22, 100%, 42%);
+      --lumo-success-color-50pct: rgba(62,229,115,0.5);
+      --lumo-success-color-10pct: rgba(62,229,115,0.1);
+      --lumo-shade: hsl(125,68%,11%); 
+      /*0, 0%, 13%*/
+      --lumo-primary-color: hsl(22,100%,42%);
       --lumo-primary-text-color: hsl(22, 100%, 42%);
       --lumo-error-color: hsl(0, 100%, 31%);
       --lumo-error-text-color: hsl(0, 100%, 31%);
-      --lumo-success-color: hsl(191, 76%, 57%);
-      --lumo-success-contrast-color: hsl(159, 29%, 10%);
-      --lumo-success-text-color: hsl(191, 76%, 57%);
-      --lumo-base-color: hsl(206, 100%, 15%);
-      --lumo-body-text-color: hsla(214, 0%, 100%, 0.9);
+      --lumo-success-color: hsl(141,76%,57%);
+      --lumo-success-contrast-color: hsl(125,68%,11%);
+      --lumo-success-text-color: hsl(125,68%,11%);
+      --lumo-base-color: hsl(140,100%,15%);
+      --lumo-body-text-color: hsla(0,0%,100%,0.9);
     }
   </style>
 </custom-style>
@@ -53,6 +54,9 @@ $_documentContainer.innerHTML = `
     vaadin-app-layout vaadin-tab a:hover {
       text-decoration: none;
     }
+    h1 {
+      color: hsl(140,100%,14%);
+      }
   </style>
 </custom-style>
 

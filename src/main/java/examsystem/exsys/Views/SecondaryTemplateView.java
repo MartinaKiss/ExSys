@@ -2,7 +2,6 @@ package examsystem.exsys.Views;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
-import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.JsModule;
@@ -15,7 +14,7 @@ import com.vaadin.flow.theme.lumo.Lumo;
 
 @Route(value="secondarytemplate")
 @JsModule("./styles/shared-styles.js")
-@Theme(value = Lumo.class, variant = Lumo.DARK)
+@Theme(value = Lumo.class, variant = Lumo.LIGHT)
 public class SecondaryTemplateView extends AppLayout {
 
     private Button logout = new Button("Kijelentkezés");
@@ -23,14 +22,16 @@ public class SecondaryTemplateView extends AppLayout {
     public SecondaryTemplateView() {
 
         HorizontalLayout imageContainer = new HorizontalLayout();
-        Image logo = new Image("frontend/logoDarkMode.png", "ExSys Logo");
+        Image logo = new Image("frontend/logoLightMode.png", "ExSys Logo");
         logo.setWidth("90%");
         logo.addClickListener(e -> UI.getCurrent().navigate(MainView.class));
         imageContainer.add(logo);
         imageContainer.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         imageContainer.setHeight("150%");
-        DrawerToggle drawerToggleButton = new DrawerToggle();
-        addToNavbar(true, drawerToggleButton, imageContainer);
+        HorizontalLayout spacerContainer = new HorizontalLayout();
+        spacerContainer.setWidth("1%");
+        addToNavbar(true, spacerContainer, imageContainer);
+
         createButtonLayout();
         logout.addThemeVariants(ButtonVariant.LUMO_LARGE);
         logout.addClickListener(e -> {
