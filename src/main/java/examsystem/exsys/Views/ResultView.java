@@ -267,21 +267,21 @@ public class ResultView extends Div implements HasUrlParameter<String>, AfterNav
 
     public void writeQuestionPages (List<Question> questionList) throws IOException {
         int flag = 0;
-        int pageCounter = 1;
+        int pageNumber = 1;
         while (flag < questionList.size() - 1){
             PDPage newPage = new PDPage();
             PDPageContentStream contentStream = new PDPageContentStream(document, newPage);
             document.addPage(newPage);
-            drawTemplate(contentStream, pageCounter + 1);
+            drawTemplate(contentStream, pageNumber + 1);
             contentStream.setLeading(20f);
-            int roundCounter = 0;
-            int pageFlag = flag;
-            for (int i = flag; i < pageFlag + 5 && i <questionList.size(); i++){
+            int questionPerPageCounter = 0;
+            int previousPageFlag = flag;
+            for (int i = flag; i < previousPageFlag + 5 && i <questionList.size(); i++){
                 Question question = questionList.get(i);
                 contentStream.beginText();
                 contentStream.setNonStrokingColor(0, 43, 77);
 
-                contentStream.newLineAtOffset(50, 650 - 110 * roundCounter);
+                contentStream.newLineAtOffset(50, 650 - 110 * questionPerPageCounter);
                 contentStream.setFont(dejaVuBoldFont, secondTitleSize);
                 contentStream.showText(flag + 1 + ". " + question.getQuestionText());
                 contentStream.newLine();
@@ -307,12 +307,12 @@ public class ResultView extends Div implements HasUrlParameter<String>, AfterNav
                     contentStream.showText(answer);
                     contentStream.newLine();
                 }
-                roundCounter = roundCounter + 1;
+                questionPerPageCounter = questionPerPageCounter + 1;
                 flag = flag + 1;
                 contentStream.endText();
             }
             contentStream.close();
-            pageCounter = pageCounter + 1;
+            pageNumber = pageNumber + 1;
         }
     }
 }
