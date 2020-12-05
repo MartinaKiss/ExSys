@@ -5,6 +5,7 @@ ExSys is a Spring Boot Vaadin project demonstrating the ideas and principles I f
 - Java 8
 - PostgreSQL database
 - Apache Maven
+- Node
 
 # Running the application:
 Execute the following Maven command in the project folder:
