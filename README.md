@@ -3,7 +3,6 @@ ExSys is a Spring Boot Vaadin project demonstrating the ideas and principles I f
 
 # Software requirements:
 - Java 8
-- Apache 2
 - PostgreSQL database
 - Apache Maven
 
